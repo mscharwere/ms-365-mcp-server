@@ -11,6 +11,7 @@ import { TOOL_CATEGORIES } from './tool-categories.js';
 import { getRequestTokens } from './request-context.js';
 import { parseTeamsUrl } from './lib/teams-url-parser.js';
 import { buildBM25Index, scoreQuery, tokenize, type BM25Index } from './lib/bm25.js';
+import { COMPACTORS, type ToolAlias } from './compactors.js';
 export interface DiscoverySearchIndex {
   bm25: BM25Index;
   nameTokens: Map<string, Set<string>>;
@@ -309,6 +310,7 @@ async function executeGraphTool(
           'excludeResponse',
           'timezone',
           'expandExtendedProperties',
+          'verbose',
         ].includes(paramName)
       ) {
         continue;
@@ -614,6 +616,31 @@ async function executeGraphTool(
       }
     }
 
+    // Apply compactor unless verbose: true was passed by the caller.
+    // The compactor reduces payload size by projecting to essential fields only.
+    // verbose: true bypasses compaction and returns the raw Graph response — useful for
+    // debugging, building new compactors, or smoke-diff validation.
+    const verbose = params.verbose === true;
+    if (!verbose && response?.content?.[0]?.text) {
+      try {
+        const rawJson = JSON.parse(response.content[0].text);
+        const compactor = COMPACTORS[tool.alias as ToolAlias];
+        if (compactor) {
+          const compacted = compactor(rawJson);
+          response.content[0].text = JSON.stringify(compacted);
+          logger.info(
+            `Compactor applied for ${tool.alias}: ${response.content[0].text.length} chars (was ${Buffer.byteLength(JSON.stringify(rawJson))} bytes)`
+          );
+        }
+      } catch (compactError) {
+        // Compaction failed — log and fall through to return raw response.
+        // Never let a compactor bug silently drop data.
+        logger.error(
+          `Compactor error for ${tool.alias}: ${(compactError as Error).message}. Returning raw response.`
+        );
+      }
+    }
+
     // Convert McpResponse to CallToolResult with the correct structure
     const content: ContentItem[] = response.content.map((item) => ({
       type: 'text' as const,
@@ -805,6 +832,17 @@ export function registerGraphTools(
     paramSchema['excludeResponse'] = z
       .boolean()
       .describe('Exclude the full response body and only return success or failure indication')
+      .optional();
+
+    // Add verbose parameter to bypass compaction and return raw Graph response.
+    // Use this for debugging, smoke-diff validation, or building new compactors.
+    // Default: false (compaction enabled).
+    paramSchema['verbose'] = z
+      .boolean()
+      .describe(
+        'When true, bypass response compaction and return the full raw Graph API response. ' +
+          'Use for debugging or smoke-diff validation. Default: false.'
+      )
       .optional();
 
     // Add timezone parameter for calendar endpoints that support it
