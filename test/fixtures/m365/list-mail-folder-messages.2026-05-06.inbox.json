@@ -20,13 +20,13 @@
       "receivedDateTime": "2026-05-06T19:53:40Z",
       "hasAttachments": true,
       "subject": "MPU0335718-00 Umbrella Declarations",
-      "bodyPreview": "Hi Carlos, Attached is your Markel umbrella declarations page.",
+      "bodyPreview": "Hi [Recipient], Attached is your Markel umbrella declarations page.",
       "importance": "normal",
       "isRead": true,
       "from": {
         "emailAddress": {
-          "name": "deLaFuente, Samantha",
-          "address": "samantha.delafuente@hubinternational.com"
+          "name": "[Insurance Agent]",
+          "address": "agent@example.com"
         }
       }
     },
@@ -34,7 +34,7 @@
       "id": "...mail-3",
       "receivedDateTime": "2026-05-06T19:55:56Z",
       "hasAttachments": false,
-      "subject": "Heads up Carlos Armando! You have new alerts on your Experian credit file",
+      "subject": "Heads up [User]! You have new alerts on your Experian credit file",
       "bodyPreview": "Sign in to see what has changed.",
       "importance": "normal",
       "isRead": false,
@@ -55,8 +55,8 @@
       "isRead": true,
       "from": {
         "emailAddress": {
-          "name": "deLaFuente, Samantha",
-          "address": "samantha.delafuente@hubinternational.com"
+          "name": "[Insurance Agent]",
+          "address": "agent@example.com"
         }
       }
     },
@@ -64,8 +64,8 @@
       "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqHwAAAA=",
       "receivedDateTime": "2026-05-06T17:55:24Z",
       "hasAttachments": false,
-      "subject": "[Western WA Surf SC] Action required - Registration for Carlos Perez Melgar",
-      "bodyPreview": "Hi Carlos armando, Congratulations! We are happy to offer Carlos Perez Melgar a spot on our Western Washington Surf BU13 Academy-North program",
+      "subject": "[Western WA Surf SC] Action required - Registration for [Family Member]",
+      "bodyPreview": "Hi [User], Congratulations! We are happy to offer [Family Member] a spot on our Western Washington Surf BU13 Academy-North program",
       "importance": "normal",
       "isRead": true,
       "from": {
@@ -85,8 +85,8 @@
       "isRead": true,
       "from": {
         "emailAddress": {
-          "name": "Dan Faires",
-          "address": "DFaires@westernwasurf.com"
+          "name": "Soccer Coach",
+          "address": "coach@example.com"
         }
       }
     },

@@ -3,11 +3,11 @@
     {
       "id": "...fam-1",
       "categories": [],
-      "subject": "TKD Sparring — Daniel #daniel #tkd #driving",
+      "subject": "TKD Sparring — [Family Member A] #child1 #tkd #driving",
       "isAllDay": false,
       "body": {
         "contentType": "text",
-        "content": "#daniel #tkd #driving — COLOSSUS scheduled (BB Test prep, Jun 12-13)"
+        "content": "#child1 #tkd #driving — COLOSSUS scheduled (BB Test prep, Jun 12-13)"
       },
       "start": {
         "dateTime": "2026-05-06T18:50:00.0000000",
@@ -27,19 +27,19 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
     {
       "id": "...fam-2",
       "categories": [],
-      "subject": "TKD Sparring — Carlitos #carlitos #tkd #driving",
+      "subject": "TKD Sparring — [Family Member B] #child2 #tkd #driving",
       "isAllDay": false,
       "body": {
         "contentType": "text",
-        "content": "#carlitos #tkd #driving — COLOSSUS scheduled per athlete_carlitos.md"
+        "content": "#child2 #tkd #driving — COLOSSUS scheduled per athlete profile"
       },
       "start": {
         "dateTime": "2026-05-06T19:35:00.0000000",
@@ -59,8 +59,8 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
@@ -92,8 +92,8 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
@@ -104,7 +104,7 @@
       "isAllDay": false,
       "body": {
         "contentType": "text",
-        "content": "12V battery replacement appointment. Originally scheduled for Apr 28 8:30 AM but Rivian quoted full day for a 15-min job — rescheduled. #carlos #driving"
+        "content": "12V battery replacement appointment. Originally scheduled for Apr 28 8:30 AM but Rivian quoted full day for a 15-min job — rescheduled. #driving"
       },
       "start": {
         "dateTime": "2026-05-07T09:00:00.0000000",
@@ -124,19 +124,19 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
     {
       "id": "...fam-5",
       "categories": [],
-      "subject": "TKD Lv5 — Daniel #daniel #tkd #driving",
+      "subject": "TKD Lv5 — [Family Member A] #child1 #tkd #driving",
       "isAllDay": false,
       "body": {
         "contentType": "text",
-        "content": "Daniel — Level 5 class, Friday slot.\n\n#daniel #tkd #driving"
+        "content": "[Family Member A] — Level 5 class, Friday slot.\n\n#child1 #tkd #driving"
       },
       "start": {
         "dateTime": "2026-05-08T18:50:00.0000000",
@@ -156,19 +156,19 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
     {
       "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgABlzwm3sAAAC722_A6G0_RaEPXMxUAMz4AAjZb-BYAAAA",
       "categories": [],
-      "subject": "🎹 EMTA Musicianship Festival — Both Boys #carlitos #daniel #activity #driving",
+      "subject": "🎹 EMTA Musicianship Festival — Both Kids #child2 #child1 #activity #driving",
       "isAllDay": false,
       "body": {
         "contentType": "text",
-        "content": "🎹 EMTA Musicianship Festival 2026 — \"A Medieval Musical Adventure\"\r\n\r\n📍 Calvin Presbyterian Church, 18826 3rd Ave NW, Shoreline, WA 98177\r\n📞 Day-of help: text Mary at 832-683-1695\r\n\r\n________________________________\r\n\r\n—— Coverage ——\r\nBoth Carlos AND Elena at venue all day. Two-adult coverage; can split between boys.\r\nCarlos = drives the family.\r\nAnchor assignments: Carlos with Daniel (morning cluster); Elena with Carlitos.\r\nBOTH parents present for BOTH solo performances (PR 1 and PR 3).\r\n\r\n________________________________\r\n\r\n—— Day flow ——\r\n8:45 AM — Arrive\r\n9:00 AM — Both kids in parallel Theory exams (Activity Center). Daniel L4 (60 min), Carlitos L6 (45 min)\r\n10:20 AM — Daniel TRS 3 block (Tech L4 / Rhythm L4 / SR L3)\r\n10:40 AM — Daniel Listening L4 (Library) — door closes 10:45 SHARP\r\n11:00 AM–12:00 PM — Midday buffer: lunch OUT near the venue.\r\n12:30 PM — Carlitos Listening L7 (Library) — Elena delivers; door closes 12:35 SHARP\r\n12:42 PM — Daniel solo: Humoresque (PR 3) — both parents present\r\n1:36 PM — Carlitos solo: Whirlwind (PR 1) — both parents present\r\n1:50 PM — Carlitos TRS 6 block (Tech L6 / Rhythm L7 / SR L5)\r\n3:15 PM — Ribbon pickup, depart\r\n"
+        "content": "🎹 EMTA Musicianship Festival 2026 — \"A Medieval Musical Adventure\"\r\n\r\n📍 Calvin Presbyterian Church, 18826 3rd Ave NW, Shoreline, WA 98177\r\n📞 Day-of help: text [Coordinator] at XXX-XXX-XXXX\r\n\r\n________________________________\r\n\r\n—— Coverage ——\r\nBoth [User] AND [Spouse] at venue all day. Two-adult coverage; can split between kids.\r\n[User] = drives the family.\r\nAnchor assignments: [User] with [Family Member A] (morning cluster); [Spouse] with [Family Member B].\r\nBOTH parents present for BOTH solo performances (PR 1 and PR 3).\r\n\r\n________________________________\r\n\r\n—— Day flow ——\r\n8:45 AM — Arrive\r\n9:00 AM — Both kids in parallel Theory exams (Activity Center). [Family Member A] L4 (60 min), [Family Member B] L6 (45 min)\r\n10:20 AM — [Family Member A] TRS 3 block (Tech L4 / Rhythm L4 / SR L3)\r\n10:40 AM — [Family Member A] Listening L4 (Library) — door closes 10:45 SHARP\r\n11:00 AM–12:00 PM — Midday buffer: lunch OUT near the venue.\r\n12:30 PM — [Family Member B] Listening L7 (Library) — [Spouse] delivers; door closes 12:35 SHARP\r\n12:42 PM — [Family Member A] solo: Humoresque (PR 3) — both parents present\r\n1:36 PM — [Family Member B] solo: Whirlwind (PR 1) — both parents present\r\n1:50 PM — [Family Member B] TRS 6 block (Tech L6 / Rhythm L7 / SR L5)\r\n3:15 PM — Ribbon pickup, depart\r\n"
       },
       "start": {
         "dateTime": "2026-05-09T08:00:00.0000000",
@@ -193,21 +193,21 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
     {
       "id": "...fam-7",
-      "subject": "🎵 Daniel — Theory L4 (Activity Center) #daniel #activity",
+      "subject": "🎵 [Family Member A] — Theory L4 (Activity Center) #child1 #activity",
       "start": {
         "dateTime": "2026-05-09T09:00:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -224,15 +224,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-8",
-      "subject": "🎵 Carlitos — Theory L6 (Activity Center) #carlitos #activity",
+      "subject": "🎵 [Family Member B] — Theory L6 (Activity Center) #child2 #activity",
       "start": {
         "dateTime": "2026-05-09T09:00:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -249,15 +249,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-9",
-      "subject": "[NOT ATTENDING] Daniel — TKD Black Belt Prep Class (Forms 3 & 4)",
+      "subject": "[NOT ATTENDING] [Family Member A] — TKD Black Belt Prep Class (Forms 3 & 4)",
       "start": {
         "dateTime": "2026-05-09T09:15:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -270,7 +270,7 @@
     },
     {
       "id": "...fam-10",
-      "subject": "🎵 Daniel — TRS 3 exam block: Tech L4 / Rhythm L4 / Sightreading L3 #daniel #activity",
+      "subject": "🎵 [Family Member A] — TRS 3 exam block: Tech L4 / Rhythm L4 / Sightreading L3 #child1 #activity",
       "start": {
         "dateTime": "2026-05-09T10:20:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -287,15 +287,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-11",
-      "subject": "🎵 Daniel — Listening L4 (Library) #daniel #activity",
+      "subject": "🎵 [Family Member A] — Listening L4 (Library) #child1 #activity",
       "start": {
         "dateTime": "2026-05-09T10:40:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -312,15 +312,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-12",
-      "subject": "🎵 Carlitos — Listening L7 (Library) #carlitos #activity",
+      "subject": "🎵 [Family Member B] — Listening L7 (Library) #child2 #activity",
       "start": {
         "dateTime": "2026-05-09T12:30:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -337,15 +337,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-13",
-      "subject": "🎵 Daniel — Solo Performance: Humoresque (PR 3) #daniel #activity",
+      "subject": "🎵 [Family Member A] — Solo Performance: Humoresque (PR 3) #child1 #activity",
       "start": {
         "dateTime": "2026-05-09T12:42:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -362,15 +362,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-14",
-      "subject": "🎵 Carlitos — Solo Performance: Whirlwind (PR 1) #carlitos #activity",
+      "subject": "🎵 [Family Member B] — Solo Performance: Whirlwind (PR 1) #child2 #activity",
       "start": {
         "dateTime": "2026-05-09T13:36:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -387,15 +387,15 @@
             "time": "0001-01-01T00:00:00Z"
           },
           "emailAddress": {
-            "name": "Elena",
-            "address": "elena.melgar@live.com"
+            "name": "[Spouse]",
+            "address": "spouse@example.com"
           }
         }
       ]
     },
     {
       "id": "...fam-15",
-      "subject": "TKD Sparring — Daniel #daniel #tkd #driving",
+      "subject": "TKD Sparring — [Family Member A] #child1 #tkd #driving",
       "start": {
         "dateTime": "2026-05-13T18:50:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -407,14 +407,14 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     },
     {
       "id": "...fam-16",
-      "subject": "TKD Sparring — Carlitos #carlitos #tkd #driving",
+      "subject": "TKD Sparring — [Family Member B] #child2 #tkd #driving",
       "start": {
         "dateTime": "2026-05-13T19:35:00.0000000",
         "timeZone": "America/Los_Angeles"
@@ -426,8 +426,8 @@
       "attendees": [],
       "organizer": {
         "emailAddress": {
-          "name": "Perez Melgar Family",
-          "address": "perezmelgar@outlook.com"
+          "name": "Family Calendar",
+          "address": "family@example.com"
         }
       }
     }
