@@ -1,0 +1,84 @@
+{
+  "_fixture_comment": "Captured from live Graph by FRIDAY 2026-05-06; PII anonymized per FRIDAY's PII flag inventory. Shape: all-day seriesMaster birthday event. STRUCTURAL: body.content === '' (truly empty string, not CRLF); isAllDay:true; recurrence.range.endDate='0001-01-01' sentinel for no-end.",
+  "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBXAAAALvbb4DobT5FoQ9czFQAzPgAB_-UIQQAAAA=",
+  "createdDateTime": "2025-05-09T06:40:12.4538372Z",
+  "lastModifiedDateTime": "2026-04-24T11:54:03.9328652Z",
+  "changeKey": "u9tvgOhtPkWhD1zMVADM+AAI02qPBQ==",
+  "categories": [],
+  "transactionId": null,
+  "originalStartTimeZone": "UTC",
+  "originalEndTimeZone": "UTC",
+  "iCalUId": "040000008200E00074C5B7101A82E00800000000485E2437ADC0DB010000000000000000100000003D9B6D6BB880E848B6826E04358E2A03",
+  "uid": "040000008200E00074C5B7101A82E00800000000485E2437ADC0DB010000000000000000100000003D9B6D6BB880E848B6826E04358E2A03",
+  "reminderMinutesBeforeStart": 1080,
+  "isReminderOn": true,
+  "hasAttachments": false,
+  "subject": "Family member birthday",
+  "bodyPreview": "",
+  "importance": "normal",
+  "sensitivity": "normal",
+  "isAllDay": true,
+  "isCancelled": false,
+  "isOrganizer": true,
+  "responseRequested": true,
+  "seriesMasterId": null,
+  "showAs": "free",
+  "type": "seriesMaster",
+  "webLink": "https://outlook.live.com/owa/?itemid=REDACTED&exvsurl=1&path=/calendar/item",
+  "onlineMeetingUrl": null,
+  "isOnlineMeeting": false,
+  "onlineMeetingProvider": "unknown",
+  "allowNewTimeProposals": true,
+  "occurrenceId": null,
+  "isDraft": false,
+  "hideAttendees": false,
+  "responseStatus": {
+    "response": "organizer",
+    "time": "0001-01-01T00:00:00Z"
+  },
+  "body": {
+    "contentType": "text",
+    "content": ""
+  },
+  "start": {
+    "dateTime": "2025-04-25T00:00:00.0000000",
+    "timeZone": "UTC"
+  },
+  "end": {
+    "dateTime": "2025-04-26T00:00:00.0000000",
+    "timeZone": "UTC"
+  },
+  "location": {
+    "displayName": "",
+    "locationType": "default",
+    "uniqueIdType": "unknown",
+    "address": {},
+    "coordinates": {}
+  },
+  "locations": [],
+  "recurrence": {
+    "pattern": {
+      "type": "absoluteYearly",
+      "interval": 1,
+      "month": 4,
+      "dayOfMonth": 25,
+      "firstDayOfWeek": "sunday",
+      "index": "first"
+    },
+    "range": {
+      "type": "noEnd",
+      "startDate": "2025-04-25",
+      "endDate": "0001-01-01",
+      "recurrenceTimeZone": "Pacific Standard Time",
+      "numberOfOccurrences": 0
+    }
+  },
+  "attendees": [],
+  "organizer": {
+    "emailAddress": {
+      "name": "Organizer Name",
+      "address": "organizer@example.com"
+    }
+  },
+  "onlineMeeting": null
+}

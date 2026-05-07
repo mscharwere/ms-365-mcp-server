@@ -1,0 +1,56 @@
+{
+  "_fixture_comment": "Captured from live Graph by FRIDAY 2026-05-06; PII anonymized (recipient replaced with recipient@example.com). Body content is real-structure synthetic: FRIDAY confirmed 147 ZWSP (U+200C) preheader chars followed by real transactional content + safelinks. The ZWSP block and structural pattern are authentic; full 8KB body was not captured (stub only). Phase 3: replace with full-body real capture.",
+  "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqG0AAAA=",
+  "createdDateTime": "2026-05-06T14:58:44Z",
+  "lastModifiedDateTime": "2026-05-06T14:58:47Z",
+  "changeKey": "CQAAABYAAAC722+A6G0+RaEPXMxUAMz4AAjZs7J1",
+  "categories": ["Norton: Scanned"],
+  "receivedDateTime": "2026-05-06T14:58:44Z",
+  "sentDateTime": "2026-05-06T14:58:31Z",
+  "hasAttachments": false,
+  "internetMessageId": "<azmyeUJhR7uL4sDAo3vobw@geopod-ismtpd-13>",
+  "subject": "Your SoFi Personal Loan Statement is ready",
+  "bodyPreview": " ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+  "importance": "normal",
+  "isReadReceiptRequested": false,
+  "isRead": false,
+  "isDraft": false,
+  "inferenceClassification": "focused",
+  "body": {
+    "contentType": "text",
+    "content": "‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌\n[SoFi]\nLog in ›<https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fablink.o.sofi.org%2Fls%2Fclick%3Fupn%3Dlogin&data=05%7C02%7C%7Cabc123%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638000000000000001%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=abc123%3D&reserved=0>\n\nYour statement is ready to view.\n\nView Statement<https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fablink.o.sofi.org%2Fls%2Fclick%3Fupn%3Dstatement&data=05%7C02%7C%7Cabc123%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638000000000000002%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=def456%3D&reserved=0>\n\nHi Carlos,\n\nYour SoFi Personal Loan statement for April 2026 is ready.\n\nView your statement online or in the SoFi app.\n\nUnsubscribe<https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fablink.o.sofi.org%2Fls%2Fclick%3Fupn%3Dunsubscribe&data=05%7C02%7C%7Cabc123%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638000000000000003%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=ghi789%3D&reserved=0>\n\n© 2026 SoFi Bank, N.A. All rights reserved. Member FDIC. Equal Housing Lender.\r\nw:752626 r: 2070911\r\n\r\n"
+  },
+  "sender": {
+    "emailAddress": {
+      "name": "SoFi",
+      "address": "no-reply@o.sofi.org"
+    }
+  },
+  "from": {
+    "emailAddress": {
+      "name": "SoFi",
+      "address": "no-reply@o.sofi.org"
+    }
+  },
+  "toRecipients": [
+    {
+      "emailAddress": {
+        "name": "recipient@example.com",
+        "address": "recipient@example.com"
+      }
+    }
+  ],
+  "ccRecipients": [],
+  "bccRecipients": [],
+  "replyTo": [
+    {
+      "emailAddress": {
+        "name": "no-reply@o.sofi.org",
+        "address": "no-reply@o.sofi.org"
+      }
+    }
+  ],
+  "flag": {
+    "flagStatus": "notFlagged"
+  }
+}

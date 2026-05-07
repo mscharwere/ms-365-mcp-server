@@ -1,5 +1,5 @@
 /**
- * M365 MCP Compactor — Phase 1
+ * M365 MCP Compactor — Phase 2
  *
  * DESIGN NOTES (read before modifying):
  *
@@ -39,7 +39,44 @@
  *    Phase 1: list-specific-calendar-events, get-specific-calendar-event, list-mail-folder-messages.
  *    Phase 2: get-specific-calendar-view, get-calendar-view, get-calendar-event,
  *             list-calendar-events, list-mail-messages, get-mail-message.
- *             (All use identical projection logic — deferred for smoke-diff validation.)
+ *             All Phase 2 tools use the same projectCalendarEvent / projectMailMessage helpers
+ *             as Phase 1 — the projection logic is already validated.
+ *
+ * 6. STRUCTURAL SURPRISES (Phase 2 — from FRIDAY's real fixture captures):
+ *
+ *    6a. ZWSP PREHEADER (stripZwspPreheader).
+ *        SoFi/Chase/Discover send 127–150 U+200C ZERO WIDTH NON-JOINER chars at body start
+ *        as a preheader-suppression technique. bodyPreview appears blank to humans.
+ *        We strip the leading ZWSP block from body.content before safelinks decoding.
+ *        The ZWSP block is pure whitespace noise — no information content.
+ *
+ *    6b. LEGACY TIMEZONE (normalizeTimezone).
+ *        Wix/iCal sends originalStartTimeZone = "tzone://Microsoft/Utc" (non-IANA).
+ *        This field is metadata-only (not used in start/end dateTime parsing by consumers).
+ *        We map known legacy forms to IANA equivalents; unknown forms pass through as-is.
+ *        We do NOT touch start.timeZone / end.timeZone — those come from Graph's own conversion.
+ *
+ *    6c. SENTINEL DATE (isSentinelDate).
+ *        recurrence.range.endDate = "0001-01-01" means "no end" in Outlook's recurrence model.
+ *        We preserve it verbatim — do NOT parse as a real date. Compactors that preserve the
+ *        recurrence object intact automatically preserve this value.
+ *
+ *    6d. EMPTY BODY DISTINCTION.
+ *        Calendar all-day seriesMaster: body.content === "" (truly empty string).
+ *        Mail (and non-all-day calendar): body.content === "\r\n" (near-empty CRLF).
+ *        The compactor preserves both as-is. DO NOT normalize "" to "\r\n" or vice versa.
+ *        The distinction matters for downstream consumers testing `content === ""`.
+ *
+ *    6e. TEMPLATE VARIABLE PRESERVATION.
+ *        Wix Automations sends unresolved template tokens like `${staff_member_n` followed by
+ *        ZWSP padding (token was truncated before variable was resolved). Do NOT try to parse
+ *        or evaluate `${...}` expressions. Pass through as-is in body.content.
+ *
+ *    6f. RECURRENCE ON SERIES MASTERS.
+ *        The recurrence object is the source-of-truth for when occurrences happen.
+ *        On seriesMaster events: preserve recurrence intact (pattern + range verbatim).
+ *        On instance/occurrence events: recurrence is null — drop it (already the Phase 1 behavior).
+ *        Sentinel endDate "0001-01-01" inside range is preserved verbatim (see 6c above).
  */
 
 // ---------------------------------------------------------------------------
@@ -78,6 +115,87 @@ export function decodeSafelinks(text: string): string {
 }
 
 // ---------------------------------------------------------------------------
+// ZWSP preheader stripper (Phase 2 — structural surprise 6a)
+// ---------------------------------------------------------------------------
+
+/**
+ * Regex matching a leading block of U+200C ZERO WIDTH NON-JOINER characters at the start of
+ * a string, optionally followed by whitespace. Requires at least 20 consecutive ZWSPs to avoid
+ * false-positives on legitimate ZWSP use in body text.
+ *
+ * Context: SoFi, Chase, Discover and other financial senders use 127–150 ZWSPs as a preheader
+ * suppressor — flooding the email client's ~140-char bodyPreview slot so the real content
+ * isn't shown as preview text. The ZWSP block carries no information.
+ */
+const ZWSP_PREHEADER_RE = /^[‌]{20,}\s*/;
+
+/**
+ * Strip the ZWSP preheader from a mail body string.
+ * Returns the body with the leading ZWSP block removed.
+ * If no ZWSP block is present, returns the original string unchanged.
+ *
+ * Operates on body.content only — do NOT apply to bodyPreview (bodyPreview is already
+ * truncated server-side and its ZWSP content is what consumers use to detect blank preview).
+ */
+export function stripZwspPreheader(body: string): string {
+  return body.replace(ZWSP_PREHEADER_RE, '');
+}
+
+// ---------------------------------------------------------------------------
+// Legacy timezone normalizer (Phase 2 — structural surprise 6b)
+// ---------------------------------------------------------------------------
+
+/**
+ * Known legacy-to-IANA timezone mappings.
+ *
+ * "tzone://Microsoft/Utc" is the legacy format emitted by Wix Automations and some iCal
+ * generators. It appears in originalStartTimeZone / originalEndTimeZone fields (metadata only —
+ * NOT in start.timeZone / end.timeZone which carry Graph's converted value).
+ *
+ * Choice: map to IANA equivalent when unambiguous; return as-is for unknown forms.
+ * Rationale: returning as-is for unknowns is safer than silently dropping or guessing.
+ * The field is metadata-only; consumers reading it for display should handle gracefully.
+ */
+const LEGACY_TZ_MAP: Record<string, string> = {
+  'tzone://Microsoft/Utc': 'UTC',
+  'tzone://Microsoft/Pacific Standard Time': 'America/Los_Angeles',
+  'tzone://Microsoft/Mountain Standard Time': 'America/Denver',
+  'tzone://Microsoft/Central Standard Time': 'America/Chicago',
+  'tzone://Microsoft/Eastern Standard Time': 'America/New_York',
+};
+
+/**
+ * Normalize a timezone string from legacy Microsoft/iCal format to IANA where known.
+ * Returns the IANA equivalent if mapped, or the original string if not recognized.
+ * Returns null if input is null/undefined.
+ *
+ * IMPORTANT: Only call this on originalStartTimeZone / originalEndTimeZone fields.
+ * NEVER apply to start.timeZone / end.timeZone — those are Graph's own output.
+ */
+export function normalizeTimezone(tz: string | null | undefined): string | null {
+  if (tz == null) return null;
+  return LEGACY_TZ_MAP[tz] ?? tz;
+}
+
+// ---------------------------------------------------------------------------
+// Sentinel date detector (Phase 2 — structural surprise 6c)
+// ---------------------------------------------------------------------------
+
+/**
+ * Detect Outlook's "no end" sentinel date in recurrence ranges.
+ *
+ * recurrence.range.endDate = "0001-01-01" means the recurrence has no end date.
+ * This is NOT a real date — it's a sentinel value used when range.type = "noEnd".
+ * Do NOT parse it as a date, do NOT compute durations from it, do NOT use it in comparisons.
+ *
+ * The compactor preserves it verbatim in the recurrence object.
+ * This function is provided for consumers that want to explicitly check before date math.
+ */
+export function isSentinelDate(d: string): boolean {
+  return d === '0001-01-01';
+}
+
+// ---------------------------------------------------------------------------
 // Core types
 // ---------------------------------------------------------------------------
 
@@ -101,16 +219,28 @@ const identity: Compactor = (raw) => raw;
  *   id, subject (tags live here — never drop), start (dateTime + timeZone — byte-identical),
  *   end (dateTime + timeZone), isAllDay, isCancelled, categories,
  *   location.displayName, body.content (already plain text via Graph Prefer header),
- *   attendees (projected to { type, status: { response }, emailAddress: { name, address } })
+ *   attendees (projected to { type, status: { response }, emailAddress: { name, address } }),
+ *   recurrence (on seriesMaster events — source-of-truth for occurrence expansion)
  *
  * DROPPED:
  *   internetMessageId, iCalUId, webLink — not read by consumers
- *   recurrence (null on instances; already expanded in view)
+ *   recurrence when null (instances; already expanded in view)
  *   organizer (not needed for briefing routing)
  *   location.locationType, location.uniqueId, location.uniqueIdType,
  *     location.address, location.coordinates, location.locationUri — only displayName used
  *   body.contentType — always "text" in our setup; redundant
  *   attendees[].status.time — always "0001-01-01T00:00:00Z" sentinel; safe to drop
+ *   originalStartTimeZone / originalEndTimeZone — legacy metadata, not used for display
+ *
+ * EMPTY BODY DISTINCTION (structural surprise 6d):
+ *   body.content === "" (truly empty) is preserved as "" — only on all-day seriesMaster events.
+ *   body.content === "\r\n" (near-empty CRLF) is preserved as "\r\n" — on most other events.
+ *   DO NOT normalize one to the other.
+ *
+ * RECURRENCE ON SERIES MASTERS (structural surprise 6f):
+ *   If event.recurrence is non-null, preserve the full recurrence object verbatim.
+ *   recurrence.range.endDate = "0001-01-01" is a sentinel (isSentinelDate) — preserved as-is.
+ *   On instance events, recurrence is null — we skip it (no key emitted).
  */
 function projectCalendarEvent(event: JsonValue): JsonValue {
   if (!event || typeof event !== 'object') return event;
@@ -150,9 +280,26 @@ function projectCalendarEvent(event: JsonValue): JsonValue {
     out.location = { displayName: event.location.displayName ?? '' };
   }
 
-  // Body — keep content, drop contentType (always "text")
+  // Body — strip ZWSP preheader, decode safelinks, keep content only.
+  // EMPTY BODY: preserve body.content as-is including "" (truly empty, all-day seriesMaster)
+  // vs "\r\n" (near-empty CRLF, most other events). DO NOT normalize.
+  // TEMPLATE VARIABLES: ${...} tokens pass through untouched (structural surprise 6e).
+  // NOTE: Calendar events CAN have safelinks in body (e.g. Wix/iCal cancellation emails
+  // sent as calendar invites — the body.content is a full email body from the booking system).
   if (event.body !== undefined) {
-    out.body = { content: event.body.content ?? '' };
+    const raw = event.body.content !== undefined ? event.body.content : '';
+    // Apply safelinks decoding to non-empty bodies only.
+    // For truly empty bodies (all-day seriesMaster, content === ""), skip to preserve the exact "" sentinel.
+    // stripZwspPreheader on "" is a no-op but keeping the guard makes intent clear.
+    const content = raw === '' ? '' : decodeSafelinks(stripZwspPreheader(raw));
+    out.body = { content };
+  }
+
+  // Recurrence — preserve intact on seriesMaster events (non-null recurrence).
+  // On instance events, recurrence is null — skip entirely (no key emitted).
+  // recurrence.range.endDate "0001-01-01" sentinel is preserved verbatim inside the object.
+  if (event.recurrence !== null && event.recurrence !== undefined) {
+    out.recurrence = event.recurrence;
   }
 
   // Attendees — project to minimal shape, drop status.time sentinel
@@ -206,10 +353,13 @@ function projectMailMessage(msg: JsonValue): JsonValue {
   // bodyPreview present on list calls (truncated ~255 chars — keep as-is, no safelinks at preview length)
   if (msg.bodyPreview !== undefined) out.bodyPreview = msg.bodyPreview;
 
-  // Body — decode safelinks, keep content only
+  // Body — strip ZWSP preheader, then decode safelinks, keep content only.
+  // Order matters: strip ZWSP first so the safelinks regex doesn't have to match through
+  // 150 zero-width chars at string start. Template variables (${...}) pass through untouched.
   if (msg.body !== undefined) {
+    const raw = msg.body.content ?? '';
     out.body = {
-      content: decodeSafelinks(msg.body.content ?? ''),
+      content: decodeSafelinks(stripZwspPreheader(raw)),
     };
   }
 
@@ -252,7 +402,7 @@ function compactList(raw: JsonValue, itemCompactor: (item: JsonValue) => JsonVal
 }
 
 // ---------------------------------------------------------------------------
-// Per-tool compactors (Phase 1 — 3 explicit + identity for remaining 267)
+// Per-tool compactors (Phase 1: 3 explicit; Phase 2: 5 more; identity for remaining 262)
 // ---------------------------------------------------------------------------
 
 /**
@@ -280,6 +430,51 @@ const compactGetSpecificCalendarEvent: Compactor = (raw) => projectCalendarEvent
  * Full body safelinks only appear in get-mail-message responses.
  */
 const compactListMailFolderMessages: Compactor = (raw) => compactList(raw, projectMailMessage);
+
+// ---------------------------------------------------------------------------
+// Phase 2 compactors — same projection logic as Phase 1; now explicitly wired
+// ---------------------------------------------------------------------------
+
+/**
+ * get-calendar-view — returns { value: Event[] } for /me/calendarView (default calendar).
+ *
+ * This is the broader calendar scan that FRIDAY uses when not targeting a specific calendar.
+ * Projection identical to list-specific-calendar-events.
+ */
+const compactGetCalendarView: Compactor = (raw) => compactList(raw, projectCalendarEvent);
+
+/**
+ * get-specific-calendar-view — returns { value: Event[] } for /me/calendars/{id}/calendarView.
+ *
+ * Phase 1 confirmed: this is the dual-pull tool (Personal + Family IDs) per
+ * feedback_m365_calendar_multi_pull.md. Phase 2 promotes from identity to explicit projection.
+ */
+const compactGetSpecificCalendarView: Compactor = (raw) => compactList(raw, projectCalendarEvent);
+
+/**
+ * list-calendar-events — returns { value: Event[] } for /me/events.
+ *
+ * General event listing without time-window scoping (unlike calendarView).
+ * Projection identical to other calendar list tools.
+ */
+const compactListCalendarEvents: Compactor = (raw) => compactList(raw, projectCalendarEvent);
+
+/**
+ * get-mail-message — returns a single Message object for /me/messages/{id}.
+ *
+ * Full body is present (not just bodyPreview). Safelinks decoding + ZWSP stripping apply.
+ * Template variables in body.content pass through untouched.
+ */
+const compactGetMailMessage: Compactor = (raw) => projectMailMessage(raw);
+
+/**
+ * list-mail-messages — returns { value: Message[], @odata.nextLink? } for /me/messages.
+ *
+ * NOTE: This tool has a stale 10-msg cache bug on Carlos's account (see feedback_m365_list_mail_messages_stale_cache.md).
+ * FRIDAY uses list-mail-folder-messages instead. We compact this anyway since the projection
+ * is identical — if the bug is ever fixed, compaction works correctly.
+ */
+const compactListMailMessages: Compactor = (raw) => compactList(raw, projectMailMessage);
 
 // ---------------------------------------------------------------------------
 // Exhaustive compactor record for all 270 Graph tools
@@ -576,14 +771,26 @@ export const COMPACTORS: Record<ToolAlias, Compactor> = {
   'list-mail-folder-messages': compactListMailFolderMessages,
 
   // -------------------------------------------------------------------------
-  // Phase 2 scope — identity until smoke-diff validates Phase 1 projections
+  // Phase 2 — explicit projections (promoted from identity)
   // -------------------------------------------------------------------------
-  'get-specific-calendar-view': identity,
-  'get-calendar-view': identity,
-  'get-calendar-event': identity,
-  'list-calendar-events': identity,
-  'list-mail-messages': identity,
-  'get-mail-message': identity,
+
+  /** Broad calendar scan — default calendar time-window view */
+  'get-calendar-view': compactGetCalendarView,
+
+  /** Specific-calendar time-window view (dual-pull tool per multi-pull memory rule) */
+  'get-specific-calendar-view': compactGetSpecificCalendarView,
+
+  /** General event listing without time-window scoping */
+  'list-calendar-events': compactListCalendarEvents,
+
+  /** Single mail message with full body — safelinks decoded, ZWSP stripped */
+  'get-mail-message': compactGetMailMessage,
+
+  /** Mail message list — same projection as list-mail-folder-messages */
+  'list-mail-messages': compactListMailMessages,
+
+  /** Single calendar event fetch (default calendar path) — same projection as get-specific-calendar-event */
+  'get-calendar-event': compactGetSpecificCalendarEvent,
 
   // -------------------------------------------------------------------------
   // Remaining 261 tools — identity passthrough
