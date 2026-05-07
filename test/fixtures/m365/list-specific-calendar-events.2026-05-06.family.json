@@ -1,0 +1,435 @@
+{
+  "value": [
+    {
+      "id": "...fam-1",
+      "categories": [],
+      "subject": "TKD Sparring — Daniel #daniel #tkd #driving",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "#daniel #tkd #driving — COLOSSUS scheduled (BB Test prep, Jun 12-13)"
+      },
+      "start": {
+        "dateTime": "2026-05-06T18:50:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-06T19:30:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "Master Hong's TKD; 1912 201st Pl SE Ste 203, Bothell WA 98012",
+        "locationType": "default",
+        "uniqueId": "Master Hong's TKD; 1912 201st Pl SE Ste 203, Bothell WA 98012",
+        "uniqueIdType": "private"
+      },
+      "recurrence": null,
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-2",
+      "categories": [],
+      "subject": "TKD Sparring — Carlitos #carlitos #tkd #driving",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "#carlitos #tkd #driving — COLOSSUS scheduled per athlete_carlitos.md"
+      },
+      "start": {
+        "dateTime": "2026-05-06T19:35:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-06T20:15:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "Master Hong's TKD; 1912 201st Pl SE Ste 203, Bothell WA 98012",
+        "locationType": "default",
+        "uniqueId": "Master Hong's TKD; 1912 201st Pl SE Ste 203, Bothell WA 98012",
+        "uniqueIdType": "private"
+      },
+      "recurrence": null,
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-3",
+      "categories": [],
+      "subject": "SBA Assessment - ELA (Day 2)",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "Smarter Balanced Assessment - English Language Arts. Please arrive on time, testing starts promptly when the bell rings."
+      },
+      "start": {
+        "dateTime": "2026-05-07T00:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-08T00:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "",
+        "locationType": "default",
+        "uniqueIdType": "unknown",
+        "address": {},
+        "coordinates": {}
+      },
+      "recurrence": null,
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-4",
+      "categories": [],
+      "subject": "Rivian Service — 12V Battery",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "12V battery replacement appointment. Originally scheduled for Apr 28 8:30 AM but Rivian quoted full day for a 15-min job — rescheduled. #carlos #driving"
+      },
+      "start": {
+        "dateTime": "2026-05-07T09:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-07T10:30:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "Rivian Service Center, Bothell, WA",
+        "locationType": "default",
+        "uniqueId": "Rivian Service Center, Bothell, WA",
+        "uniqueIdType": "private"
+      },
+      "recurrence": null,
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-5",
+      "categories": [],
+      "subject": "TKD Lv5 — Daniel #daniel #tkd #driving",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "Daniel — Level 5 class, Friday slot.\n\n#daniel #tkd #driving"
+      },
+      "start": {
+        "dateTime": "2026-05-08T18:50:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-08T19:30:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "Master Hong's World Champion TKD — 1912 201st Pl SE Ste 202, Bothell WA 98012",
+        "locationType": "default",
+        "uniqueId": "Master Hong's World Champion TKD — 1912 201st Pl SE Ste 202, Bothell WA 98012",
+        "uniqueIdType": "private"
+      },
+      "recurrence": null,
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgABlzwm3sAAAC722_A6G0_RaEPXMxUAMz4AAjZb-BYAAAA",
+      "categories": [],
+      "subject": "🎹 EMTA Musicianship Festival — Both Boys #carlitos #daniel #activity #driving",
+      "isAllDay": false,
+      "body": {
+        "contentType": "text",
+        "content": "🎹 EMTA Musicianship Festival 2026 — \"A Medieval Musical Adventure\"\r\n\r\n📍 Calvin Presbyterian Church, 18826 3rd Ave NW, Shoreline, WA 98177\r\n📞 Day-of help: text Mary at 832-683-1695\r\n\r\n________________________________\r\n\r\n—— Coverage ——\r\nBoth Carlos AND Elena at venue all day. Two-adult coverage; can split between boys.\r\nCarlos = drives the family.\r\nAnchor assignments: Carlos with Daniel (morning cluster); Elena with Carlitos.\r\nBOTH parents present for BOTH solo performances (PR 1 and PR 3).\r\n\r\n________________________________\r\n\r\n—— Day flow ——\r\n8:45 AM — Arrive\r\n9:00 AM — Both kids in parallel Theory exams (Activity Center). Daniel L4 (60 min), Carlitos L6 (45 min)\r\n10:20 AM — Daniel TRS 3 block (Tech L4 / Rhythm L4 / SR L3)\r\n10:40 AM — Daniel Listening L4 (Library) — door closes 10:45 SHARP\r\n11:00 AM–12:00 PM — Midday buffer: lunch OUT near the venue.\r\n12:30 PM — Carlitos Listening L7 (Library) — Elena delivers; door closes 12:35 SHARP\r\n12:42 PM — Daniel solo: Humoresque (PR 3) — both parents present\r\n1:36 PM — Carlitos solo: Whirlwind (PR 1) — both parents present\r\n1:50 PM — Carlitos TRS 6 block (Tech L6 / Rhythm L7 / SR L5)\r\n3:15 PM — Ribbon pickup, depart\r\n"
+      },
+      "start": {
+        "dateTime": "2026-05-09T08:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T16:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "location": {
+        "displayName": "Calvin Presbyterian Church, 18826 3rd Ave NW, Shoreline, WA 98177",
+        "locationType": "default",
+        "uniqueId": "Calvin Presbyterian Church, 18826 3rd Ave NW, Shoreline, WA 98177",
+        "uniqueIdType": "private"
+      },
+      "recurrence": null,
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-7",
+      "subject": "🎵 Daniel — Theory L4 (Activity Center) #daniel #activity",
+      "start": {
+        "dateTime": "2026-05-09T09:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T10:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-8",
+      "subject": "🎵 Carlitos — Theory L6 (Activity Center) #carlitos #activity",
+      "start": {
+        "dateTime": "2026-05-09T09:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T09:45:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-9",
+      "subject": "[NOT ATTENDING] Daniel — TKD Black Belt Prep Class (Forms 3 & 4)",
+      "start": {
+        "dateTime": "2026-05-09T09:15:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T09:55:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": []
+    },
+    {
+      "id": "...fam-10",
+      "subject": "🎵 Daniel — TRS 3 exam block: Tech L4 / Rhythm L4 / Sightreading L3 #daniel #activity",
+      "start": {
+        "dateTime": "2026-05-09T10:20:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T10:35:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-11",
+      "subject": "🎵 Daniel — Listening L4 (Library) #daniel #activity",
+      "start": {
+        "dateTime": "2026-05-09T10:40:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T11:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-12",
+      "subject": "🎵 Carlitos — Listening L7 (Library) #carlitos #activity",
+      "start": {
+        "dateTime": "2026-05-09T12:30:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T12:45:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-13",
+      "subject": "🎵 Daniel — Solo Performance: Humoresque (PR 3) #daniel #activity",
+      "start": {
+        "dateTime": "2026-05-09T12:42:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T13:00:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-14",
+      "subject": "🎵 Carlitos — Solo Performance: Whirlwind (PR 1) #carlitos #activity",
+      "start": {
+        "dateTime": "2026-05-09T13:36:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-09T13:50:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [
+        {
+          "type": "required",
+          "status": {
+            "response": "none",
+            "time": "0001-01-01T00:00:00Z"
+          },
+          "emailAddress": {
+            "name": "Elena",
+            "address": "elena.melgar@live.com"
+          }
+        }
+      ]
+    },
+    {
+      "id": "...fam-15",
+      "subject": "TKD Sparring — Daniel #daniel #tkd #driving",
+      "start": {
+        "dateTime": "2026-05-13T18:50:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-13T19:30:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    },
+    {
+      "id": "...fam-16",
+      "subject": "TKD Sparring — Carlitos #carlitos #tkd #driving",
+      "start": {
+        "dateTime": "2026-05-13T19:35:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "end": {
+        "dateTime": "2026-05-13T20:15:00.0000000",
+        "timeZone": "America/Los_Angeles"
+      },
+      "attendees": [],
+      "organizer": {
+        "emailAddress": {
+          "name": "Perez Melgar Family",
+          "address": "perezmelgar@outlook.com"
+        }
+      }
+    }
+  ]
+}

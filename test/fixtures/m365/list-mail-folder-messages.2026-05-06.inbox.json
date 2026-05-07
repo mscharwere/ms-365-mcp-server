@@ -1,0 +1,294 @@
+{
+  "value": [
+    {
+      "id": "...mail-1",
+      "receivedDateTime": "2026-05-06T21:28:05Z",
+      "hasAttachments": false,
+      "subject": "New for you: Daydrift gear coming in hot",
+      "bodyPreview": "Future you is already flexing.",
+      "importance": "normal",
+      "isRead": false,
+      "from": {
+        "emailAddress": {
+          "name": "lululemon",
+          "address": "hello@e.lululemon.com"
+        }
+      }
+    },
+    {
+      "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqIYAAAA=",
+      "receivedDateTime": "2026-05-06T19:53:40Z",
+      "hasAttachments": true,
+      "subject": "MPU0335718-00 Umbrella Declarations",
+      "bodyPreview": "Hi Carlos, Attached is your Markel umbrella declarations page.",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "deLaFuente, Samantha",
+          "address": "samantha.delafuente@hubinternational.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-3",
+      "receivedDateTime": "2026-05-06T19:55:56Z",
+      "hasAttachments": false,
+      "subject": "Heads up Carlos Armando! You have new alerts on your Experian credit file",
+      "bodyPreview": "Sign in to see what has changed.",
+      "importance": "normal",
+      "isRead": false,
+      "from": {
+        "emailAddress": {
+          "name": "Experian Alerts",
+          "address": "support@s.usa.experian.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-4",
+      "receivedDateTime": "2026-05-06T18:19:41Z",
+      "hasAttachments": false,
+      "subject": "RE: Umbrella Quote",
+      "bodyPreview": "I have submitted for processing. Once completed Markel will mail you a billing statement.",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "deLaFuente, Samantha",
+          "address": "samantha.delafuente@hubinternational.com"
+        }
+      }
+    },
+    {
+      "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqHwAAAA=",
+      "receivedDateTime": "2026-05-06T17:55:24Z",
+      "hasAttachments": false,
+      "subject": "[Western WA Surf SC] Action required - Registration for Carlos Perez Melgar",
+      "bodyPreview": "Hi Carlos armando, Congratulations! We are happy to offer Carlos Perez Melgar a spot on our Western Washington Surf BU13 Academy-North program",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "Western WA Surf SC Admin",
+          "address": "no-reply@byga.net"
+        }
+      }
+    },
+    {
+      "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqHsAAAA=",
+      "receivedDateTime": "2026-05-06T17:32:13Z",
+      "hasAttachments": false,
+      "subject": "U13-U15 Tryout Update - North Region",
+      "bodyPreview": "Hello North Families, Thank you again for your time, energy, and trust throughout our U13-U15 tryout process.",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "Dan Faires",
+          "address": "DFaires@westernwasurf.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-7",
+      "receivedDateTime": "2026-05-06T19:28:48Z",
+      "hasAttachments": false,
+      "subject": "Your UPS Package was delivered",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "UPS",
+          "address": "mcinfo@ups.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-8",
+      "receivedDateTime": "2026-05-06T17:10:30Z",
+      "hasAttachments": false,
+      "subject": "UPS Update: Package Scheduled for Delivery Today",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "UPS",
+          "address": "mcinfo@ups.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-9",
+      "receivedDateTime": "2026-05-06T18:30:29Z",
+      "hasAttachments": false,
+      "subject": "Delivered: Runcati Boys Kids... and 1 more item",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "Amazon.com",
+          "address": "order-update@amazon.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-10",
+      "receivedDateTime": "2026-05-06T17:01:48Z",
+      "hasAttachments": false,
+      "subject": "Out for delivery: Runcati Boys Kids... and 1 more item",
+      "importance": "normal",
+      "isRead": true,
+      "from": {
+        "emailAddress": {
+          "name": "Amazon.com",
+          "address": "shipment-tracking@amazon.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-11",
+      "receivedDateTime": "2026-05-06T18:33:04Z",
+      "subject": "Small steps, big boost to your well-being",
+      "from": {
+        "emailAddress": {
+          "name": "Lyra Health",
+          "address": "hello@mc.lyrahealth.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-12",
+      "receivedDateTime": "2026-05-06T18:13:22Z",
+      "subject": "Unlock your exclusive Amex Offers",
+      "from": {
+        "emailAddress": {
+          "name": "Amex Offers from American Express",
+          "address": "americanexpress@member.americanexpress.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-13",
+      "receivedDateTime": "2026-05-06T18:07:26Z",
+      "subject": "Your Mail Was Delivered Wed, May 06",
+      "from": {
+        "emailAddress": {
+          "name": "USPS Informed Delivery",
+          "address": "USPSInformeddelivery@email.informeddelivery.usps.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-14",
+      "receivedDateTime": "2026-05-06T17:21:43Z",
+      "subject": "Mother's Day Sale: Skip the flowers",
+      "from": {
+        "emailAddress": {
+          "name": "Brown Bear Car Wash",
+          "address": "brownbearcarwash@brownbear.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-15",
+      "receivedDateTime": "2026-05-06T16:28:55Z",
+      "subject": "UniFi Talk Just Leveled Up",
+      "from": {
+        "emailAddress": {
+          "name": "Ubiquiti",
+          "address": "updates@ui.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-16",
+      "receivedDateTime": "2026-05-06T16:23:53Z",
+      "subject": "The easiest way to invest in real estate",
+      "from": {
+        "emailAddress": {
+          "name": "Fundrise",
+          "address": "investments@fundrise.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-17",
+      "receivedDateTime": "2026-05-06T16:23:01Z",
+      "subject": "You sent $3,177.87 from account ending in (...6303)",
+      "from": {
+        "emailAddress": {
+          "name": "Chase",
+          "address": "no.reply.alerts@chase.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-18",
+      "receivedDateTime": "2026-05-06T16:01:44Z",
+      "subject": "First Tech planned system maintenance this weekend",
+      "from": {
+        "emailAddress": {
+          "name": "First Tech Federal Credit Union",
+          "address": "member.communications@firsttechfed.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-19",
+      "receivedDateTime": "2026-05-06T15:59:11Z",
+      "subject": "Something Big is Taking Shape.",
+      "from": {
+        "emailAddress": {
+          "name": "LiberNovo",
+          "address": "official@libernovo.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-20",
+      "receivedDateTime": "2026-05-06T15:34:30Z",
+      "subject": "FedEx Service Alerts: National Service Disruption",
+      "from": {
+        "emailAddress": {
+          "name": "FedEx",
+          "address": "FedEx@message.fedex.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-21",
+      "receivedDateTime": "2026-05-06T19:36:45Z",
+      "subject": "Treat Mom to delightful mornings with the gift of Trade Coffee!",
+      "from": {
+        "emailAddress": {
+          "name": "Passport Savings",
+          "address": "donotreply@passportunlimited.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-22",
+      "receivedDateTime": "2026-05-06T18:30:18Z",
+      "subject": "Floral assets for spring",
+      "from": {
+        "emailAddress": {
+          "name": "Motion Array",
+          "address": "Team@newsletter.motionarray.com"
+        }
+      }
+    },
+    {
+      "id": "...mail-23",
+      "receivedDateTime": "2026-05-06T21:16:44Z",
+      "subject": "Roll out.",
+      "from": {
+        "emailAddress": {
+          "name": "Peak Design",
+          "address": "info@peakdesign.com"
+        }
+      }
+    }
+  ],
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/me/mailFolders('inbox')/messages?$filter=receivedDateTime+ge+2026-04-29T00:00:00Z&$orderby=receivedDateTime+desc&$top=25&$skip=25"
+}

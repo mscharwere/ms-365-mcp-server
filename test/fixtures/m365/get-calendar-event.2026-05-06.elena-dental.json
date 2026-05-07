@@ -1,0 +1,41 @@
+{
+  "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDQAAALvbb4DobT5FoQ9czFQAzPgACNPz45UAAAA=",
+  "categories": [],
+  "subject": "Elena — Dental Cleaning, Dr. Audrey Tatt (Carlos driving)",
+  "isAllDay": false,
+  "body": {
+    "contentType": "text",
+    "content": "Elena's routine dental cleaning. Carlos is driving her to the appointment.\n\nDr. Audrey K. Tatt, DDS\n15419 NE 20th St Ste 206\nBellevue, WA 98007\nPhone: (425) 747-9840"
+  },
+  "start": {
+    "dateTime": "2026-05-06T14:00:00.0000000",
+    "timeZone": "America/Los_Angeles"
+  },
+  "end": {
+    "dateTime": "2026-05-06T15:00:00.0000000",
+    "timeZone": "America/Los_Angeles"
+  },
+  "location": {
+    "displayName": "Audrey K. Tatt, DDS — 15419 NE 20th St Ste 206, Bellevue, WA 98007",
+    "locationUri": "",
+    "locationType": "default",
+    "uniqueId": "Audrey K. Tatt, DDS — 15419 NE 20th St Ste 206, Bellevue, WA 98007",
+    "uniqueIdType": "private",
+    "address": {
+      "street": "15419 NE 20th St Ste 206",
+      "city": "Bellevue",
+      "state": "WA",
+      "countryOrRegion": "United States",
+      "postalCode": "98007"
+    },
+    "coordinates": {}
+  },
+  "recurrence": null,
+  "attendees": [],
+  "organizer": {
+    "emailAddress": {
+      "name": "Carlos Armando Perez Enriquez",
+      "address": "mscharwere@live.com"
+    }
+  }
+}
