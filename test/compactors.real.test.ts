@@ -1,7 +1,20 @@
 /**
  * Real-fixture compactor tests — Phase 1
  *
- * All fixtures are captured from live Graph API calls by FRIDAY on 2026-05-06.
+ * 5 of 6 fixtures are captured from live Graph API calls by FRIDAY on 2026-05-06:
+ *   - list-specific-calendar-events.2026-05-06.personal.json
+ *   - list-specific-calendar-events.2026-05-06.family.json
+ *   - get-calendar-event.2026-05-06.elena-dental.json
+ *   - get-mail-message.2026-05-06.markel-umbrella.json
+ *   - list-mail-folder-messages.2026-05-06.inbox.json
+ *
+ * EXCEPTION — get-mail-message.2026-05-06.lululemon-safelinks.json is SYNTHETIC.
+ *   FRIDAY's original capture omitted the message body (metadata-only stub was saved).
+ *   The synthetic fixture replicates the Safelinks URL structure faithfully enough to
+ *   test the decoder, but uses anonymised tokens (abc123/def456/…) and a placeholder
+ *   recipient address (samantha@example.com).
+ *   TODO Phase 2: replace with a real full-body marketing-email capture from FRIDAY.
+ *
  * Raw responses live at: test/fixtures/m365/
  * Reference baseline: C:/Jarvis/CORTEX/m365-compactor-cutover-ref-pre.json
  *
@@ -9,7 +22,7 @@
  *   1. Timezone string is "America/Los_Angeles" (IANA), NOT "Pacific Standard Time" (Windows form).
  *      TARS §7 CI assertion used the Windows form — corrected in every assertion below.
  *   2. Mail body bloat is SAFELINKS, not HTML. Graph already returns plain text.
- *      Safelinks decoder tested against synthetic lululemon fixture matching documented structure.
+ *      Safelinks decoder tested against the synthetic lululemon fixture (see EXCEPTION above).
  */
 
 import { describe, it, expect } from 'vitest';
