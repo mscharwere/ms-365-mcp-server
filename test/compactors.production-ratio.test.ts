@@ -117,31 +117,33 @@ describe('PRODUCTION RATIO — mail tools (Phase 3: full-body real captures)', (
     expect(compact.body.content).toContain('click.e.lululemon.com');
   });
 
-  it('get-mail-message (SoFi ZWSP + safelinks, full body) — current ratio ≤0.70 (Phase 3 Step 2 will tighten)', () => {
-    // PHASE 3 STEP 1: Real full-body capture replacing Phase 2 metadata stub.
-    // Raw body is 17.9KB with 143 ZWSP preheader chars (interleaved with spaces)
-    // and ~14 ablink.o.sofi.org safelinks.
+  it('get-mail-message (SoFi ZWSP + safelinks, full body) — ratio ≤0.66', () => {
+    // PHASE 3 STEP 2: Widened ZWSP_PREHEADER_RE now strips the interleaved
+    // SPACE+ZWSP preheader (~292 bytes saved on body.content).
     //
-    // KNOWN GAP (Phase 3 Step 2 for KAREN): the current ZWSP_PREHEADER_RE only
-    // matches a CONTIGUOUS run of ZWSPs at index 0. The real production body
-    // starts with a SPACE then has interleaved ZWSPs+spaces, so the strip is a
-    // no-op — leaving ~286 bytes of preheader noise in the compact output.
-    // Once KAREN widens the regex (Phase 3 Step 2), this ratio will drop further.
+    // Raw body is 17.6KB with 143 ZWSP preheader chars interleaved with 149 spaces
+    // for the leading 292 chars, plus ~14 ablink.o.sofi.org safelinks expanded
+    // server-side via the Defender redirector.
     //
-    // MEASURED CURRENT: ratio ≈0.68 (raw 20,679 / compact 13,987). After ZWSP
-    // strip lands, expect to drop closer to ≤0.50.
+    // MEASURED (Phase 3 Step 2): ratio ≈0.6481 (raw 20,679 / compact 13,403).
+    // Improvement vs. Phase 3 Step 1 baseline of 0.68 is modest (~3.4 pts) because
+    // the body bulk is dominated by safelinks-decoded URLs, not the preheader run.
+    // Pre-strip compact was 13,987; post-strip is 13,403 — 584 bytes saved
+    // (preheader chars + JSON escape overhead for control chars / ZWSPs).
     //
-    // The gate here is ≤0.70 — anti-inflation guard for current state. KAREN's
-    // Step 2 PR should TIGHTEN this to ≤0.55 once the ZWSP regex is fixed.
+    // Gate set at ≤0.66 — small headroom above the measured 0.6481 to absorb
+    // future fixture refresh jitter. Honest bound, not aspirational.
     const raw = loadFixture('get-mail-message.2026-05-06.sofi-zwsp.json') as {
       body: { content: string };
     };
     const compact = COMPACTORS['get-mail-message'](raw) as { body: { content: string } };
     const ratio = byteSize(compact) / byteSize(raw);
-    expect(ratio).toBeLessThanOrEqual(0.7);
-    // Structural validation: safelinks decoded regardless of ZWSP gap
+    expect(ratio).toBeLessThanOrEqual(0.66);
+    // Structural validation: safelinks decoded
     expect(compact.body.content).not.toContain('safelinks.protection.outlook.com');
     expect(compact.body.content).toContain('ablink.o.sofi.org');
+    // Structural validation: ZWSP preheader stripped — body now starts with `[SoFi]`
+    expect(compact.body.content.startsWith('[SoFi]')).toBe(true);
   });
 
   it('list-mail-folder-messages (inbox, 23 msgs) — ratio ≤1.05 (anti-inflation gate only)', () => {
