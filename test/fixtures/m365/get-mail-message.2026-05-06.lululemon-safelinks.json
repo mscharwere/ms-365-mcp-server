@@ -1,18 +1,53 @@
 {
+  "_fixture_comment": "Real message metadata captured from live Graph by FRIDAY 2026-05-06; PII anonymized (recipient replaced with recipient@example.com / Recipient Name). Body content is real-structure synthetic: FRIDAY's capture confirmed ~25 safelinks wrapping click.e.lululemon.com destinations; the sample safelink in the fixture metadata was real (na01 host, 05|02 data version). Body built from real safelink sample + structural pattern — decoder correctness test is valid. Full 14KB body was not captured by FRIDAY (stub only). Phase 3: replace with full-body real capture.",
   "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDAAAALvbb4DobT5FoQ9czFQAzPgACNrRqIkAAAA=",
+  "createdDateTime": "2026-05-06T21:28:05Z",
+  "lastModifiedDateTime": "2026-05-06T21:28:08Z",
+  "categories": ["Marketing (Superhuman/AI)", "Norton: Scanned"],
   "receivedDateTime": "2026-05-06T21:28:05Z",
+  "sentDateTime": "2026-05-06T21:28:00Z",
   "hasAttachments": false,
+  "internetMessageId": "<aab579a5-04a0-41eb-83a4-3363ca48b881@atl1s11mta1407.xt.local>",
   "subject": "New for you: Daydrift gear coming in hot",
+  "bodyPreview": "Future you is already flexing.",
   "importance": "normal",
+  "isReadReceiptRequested": false,
   "isRead": false,
+  "isDraft": false,
+  "inferenceClassification": "other",
   "body": {
     "contentType": "text",
-    "content": "Future you is already flexing.\r\n\r\nShop the new Daydrift collection:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DdaydriftShop&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000001%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=abc123%3D&reserved=0\r\n\r\nMen's Daydrift Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DdaydriftJoggerMens&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000002%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=def456%3D&reserved=0\r\n\r\nWomen's Daydrift Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DdaydriftJoggerWomens&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000003%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=ghi789%3D&reserved=0\r\n\r\nNew Colours in ABC Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DabcJoggerColors&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000004%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=jkl012%3D&reserved=0\r\n\r\nShop All New Arrivals:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DnewArrivals&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000005%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=mno345%3D&reserved=0\r\n\r\nFree shipping on orders over $100:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DfreeShipping&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000006%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=pqr678%3D&reserved=0\r\n\r\nUnsubscribe:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3Dunsubscribe&data=05%7C02%7Csamantha%40example.com%7Cabc123%7C0%7C0%7C638000000000000007%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=stu901%3D&reserved=0\r\n\r\nlululemon athletica | 1818 Cornwall Ave, Vancouver, BC V6J 1C7\r\n"
+    "content": "Future you is already flexing.\r\n\r\nShop the new Daydrift collection:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2F%3Fqs%3DABB7InYiOjEsImQiOjQ4Njh9AAsAAAAAAL_mmOnz5gyS6waHqqbOR5YqetOYBF0AT9F1iVY0H2cLuC87k4PkpTb8KfSG6wl1zOm39XmHXq2SoqejP8oWW9IVX0NiMWB2BgQA6Wxzvrua2pax&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642164%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ljlCfmG6E4SxjIqWxXIvR8IOQVjcmLdDJKzAifDzBCI%3D&reserved=0\r\n\r\nMen's Daydrift Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DdaydriftJoggerMens&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642165%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=def456%3D&reserved=0\r\n\r\nWomen's Daydrift Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DdaydriftJoggerWomens&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642166%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=ghi789%3D&reserved=0\r\n\r\nNew Colours in ABC Jogger:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DabcJoggerColors&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642167%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=jkl012%3D&reserved=0\r\n\r\nShop All New Arrivals:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DnewArrivals&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642168%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=mno345%3D&reserved=0\r\n\r\nFree shipping on orders over $100:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3DfreeShipping&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642169%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=pqr678%3D&reserved=0\r\n\r\nUnsubscribe:\r\nhttps://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fclick.e.lululemon.com%2Fls%2Fclick%3Fupn%3Dunsubscribe&data=05%7C02%7C%7C85708cfe749146253cb308deabb65a9b%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639136996855642170%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=stu901%3D&reserved=0\r\n\r\nlululemon athletica | 1818 Cornwall Ave, Vancouver, BC V6J 1C7\r\n"
+  },
+  "sender": {
+    "emailAddress": {
+      "name": "lululemon",
+      "address": "hello@e.lululemon.com"
+    }
   },
   "from": {
     "emailAddress": {
       "name": "lululemon",
       "address": "hello@e.lululemon.com"
     }
-  }
+  },
+  "toRecipients": [
+    {
+      "emailAddress": {
+        "name": "Recipient Name",
+        "address": "recipient@example.com"
+      }
+    }
+  ],
+  "ccRecipients": [],
+  "bccRecipients": [],
+  "replyTo": [
+    {
+      "emailAddress": {
+        "name": "lululemon",
+        "address": "reply-CGKITG3QAC4U5NBYGRWB23USSA.110056@reply.e.lululemon.com"
+      }
+    }
+  ],
+  "flag": { "flagStatus": "notFlagged" }
 }

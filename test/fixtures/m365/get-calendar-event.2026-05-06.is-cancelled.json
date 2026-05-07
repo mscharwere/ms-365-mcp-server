@@ -1,0 +1,86 @@
+{
+  "_fixture_comment": "Captured from live Graph by FRIDAY 2026-05-06; PII anonymized per FRIDAY's PII flag inventory. Shape: isCancelled:true singleInstance. STRUCTURAL: originalStartTimeZone='tzone://Microsoft/Utc' (legacy Wix/iCal format, not IANA); body contains ZWSP chars (U+200C) in staff template variable '${staff_member_n' + trailing ZWSPs; body has 3 real na01.safelinks; body contains unresolved ESP template variable ${staff_member_n — preserve as-is.",
+  "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDQAAALvbb4DobT5FoQ9czFQAzPgAByDqeO4AAAA=",
+  "createdDateTime": "2024-06-18T05:46:47.2984238Z",
+  "lastModifiedDateTime": "2024-06-19T18:26:56.7636707Z",
+  "changeKey": "u9tvgOhtPkWhD1zMVADM+AAHHu4yCA==",
+  "categories": [],
+  "transactionId": null,
+  "originalStartTimeZone": "tzone://Microsoft/Utc",
+  "originalEndTimeZone": "tzone://Microsoft/Utc",
+  "iCalUId": "040000008200E00074C5B7101A82E0080000000000000000000000000000000000000000310000007643616C2D5569640100000062336237323862332D386564652D343330382D623437322D39393365363632323936303500",
+  "uid": "b3b728b3-8ede-4308-b472-993e66229605",
+  "reminderMinutesBeforeStart": 0,
+  "isReminderOn": false,
+  "hasAttachments": false,
+  "subject": "Canceled: Level 5",
+  "bodyPreview": "Hi Client Name, Just letting you know that \"Level 5\" has been canceled. Feel free to book a new service or reach out if you have any questions. | Hello,\r\nWe have made the difficult decision to cancel today's classes due to the Master's illness. You will ",
+  "importance": "normal",
+  "sensitivity": "normal",
+  "isAllDay": false,
+  "isCancelled": true,
+  "isOrganizer": false,
+  "responseRequested": false,
+  "seriesMasterId": null,
+  "showAs": "free",
+  "type": "singleInstance",
+  "webLink": "https://outlook.live.com/owa/?itemid=REDACTED&exvsurl=1&path=/calendar/item",
+  "onlineMeetingUrl": null,
+  "isOnlineMeeting": false,
+  "onlineMeetingProvider": "unknown",
+  "allowNewTimeProposals": true,
+  "occurrenceId": null,
+  "isDraft": false,
+  "hideAttendees": false,
+  "responseStatus": {
+    "response": "notResponded",
+    "time": "0001-01-01T00:00:00Z"
+  },
+  "body": {
+    "contentType": "text",
+    "content": "Hi Client Name, Just letting you know that \"Level 5\" has been canceled. Feel free to book a new service or reach out if you have any questions. | Hello,\r\nWe have made the difficult decision to cancel today's classes due to the Master's illness. You will get one class credit for your future makeup class.(You can rebook another class this week or you can use it in July.) Just let us know when you want to use your credit.\r\nWe apologize for this short notice and any inconvenience caused. Thank you for your understanding, and please do not hesitate to contact us if you have any questions. Thank you!\r\n\r\nLevel 5\r\n\r\nDate: June 19, 2024 at 6:50 PM PDT\r\n\r\nLocation: Fitness Studio Location\r\n\r\nStaff: ${staff_member_n‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\r\n\r\n\r\nCan't see this message? View in a browser<https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fshoutout.wix.com%2Fso%2Ftr%2F041f2b62-9f57-4a20-b273-195a0b0f9339%2Fc%3Fw%3DyL4A4Di4ZazcHObcRv-TmWPdWAWbNSHHWynl0DDghik.eyJ1IjoiaHR0cHM6Ly9zaG91dG91dC53aXguY29tL3NvL3RyLzA0MWYyYjYyLTlmNTctNGEyMC1iMjczLTE5NWEwYjBmOTMzOSIsImMiOiI1NTJjMzcwMi1iNGI4LTQyNzItYWVlNy0yMzg4NTA4NzBlM2QiLCJtIjoibWFpbCJ9&data=05%7C02%7C%7Cc4be6df76caa42e97dc508dc908af1c6%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638544173675516420%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=2X43z8iXTCXp5q6uij5E%2BdItnsVtTHsAXS6ZO%2BQvIlg%3D&reserved=0>\r\n\r\nYour booking has been canceled\r\n\r\nHi Client Name,\r\n\r\nJust letting you know that \"Level 5\" has been canceled. Feel free to book a new service or reach out if you have any questions.\r\n\r\nBook New Service<https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.masterhongtkd.com%2Fbooking-calendar%2Flevel-5&data=05%7C02%7C%7Cc4be6df76caa42e97dc508dc908af1c6%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638544173675530748%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=r45DpWfJ%2BIViqLvKaTV4jgNxN4imnPN6Klu9QjBALjk%3D&reserved=0>\r\n\r\nThanks,\r\n\r\nMaster Hong's World Champion Taekwondo\r\n\r\n206-900-6313\r\n\r\ninfo.masterhongtkd@gmail.com<https://na01.safelinks.protection.outlook.com/?url=mailto%3Ainfo.masterhongtkd%40gmail.com&data=05%7C02%7C%7Cc4be6df76caa42e97dc508dc908af1c6%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638544173675538779%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=4lMtskndkJ5pK2c0waVZmgflOF7kug74l4nuzQ82%2BKA%3D&reserved=0>\r\n\r\n"
+  },
+  "start": {
+    "dateTime": "2024-06-20T01:50:00.0000000",
+    "timeZone": "UTC"
+  },
+  "end": {
+    "dateTime": "2024-06-20T02:30:00.0000000",
+    "timeZone": "UTC"
+  },
+  "location": {
+    "displayName": "Fitness Studio Location",
+    "locationType": "default",
+    "uniqueId": "Fitness Studio Location",
+    "uniqueIdType": "private"
+  },
+  "locations": [
+    {
+      "displayName": "Fitness Studio Location",
+      "locationType": "default",
+      "uniqueId": "Fitness Studio Location",
+      "uniqueIdType": "private"
+    }
+  ],
+  "recurrence": null,
+  "attendees": [
+    {
+      "type": "required",
+      "status": {
+        "response": "none",
+        "time": "0001-01-01T00:00:00Z"
+      },
+      "emailAddress": {
+        "name": "no-reply@wixsiteautomations.com",
+        "address": "no-reply@wixsiteautomations.com"
+      }
+    }
+  ],
+  "organizer": {
+    "emailAddress": {
+      "name": "no-reply@wixsiteautomations.com",
+      "address": "no-reply@wixsiteautomations.com"
+    }
+  },
+  "onlineMeeting": null
+}

@@ -1,0 +1,85 @@
+{
+  "_fixture_comment": "Captured from live Graph by FRIDAY 2026-05-06; PII anonymized per FRIDAY's PII flag inventory. Shape: seriesMaster with explicit endDate (recurrence.range.type='endDate'). STRUCTURAL: body.content='\\r\\n' (near-empty CRLF — distinct from calendar all-day truly-empty ''); type='seriesMaster'; seriesMasterId=null; recurrence object preserved intact (series master is source-of-truth).",
+  "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDQAAALvbb4DobT5FoQ9czFQAzPgACL1lg6sAAAA=",
+  "createdDateTime": "2026-03-20T22:06:27.7744819Z",
+  "lastModifiedDateTime": "2026-04-24T22:01:00.5557387Z",
+  "changeKey": "u9tvgOhtPkWhD1zMVADM+AAI02qyLA==",
+  "categories": [],
+  "transactionId": "{E65977A5-A0F6-4110-A503-5E733E9B8A1F}",
+  "originalStartTimeZone": "Pacific Standard Time",
+  "originalEndTimeZone": "Pacific Standard Time",
+  "iCalUId": "040000008200E00074C5B7101A82E00800000000380D86CDB5B8DC0100000000000000001000000037BA20E2E8D8DB4583097A824E0F89F4",
+  "uid": "040000008200E00074C5B7101A82E00800000000380D86CDB5B8DC0100000000000000001000000037BA20E2E8D8DB4583097A824E0F89F4",
+  "reminderMinutesBeforeStart": 15,
+  "isReminderOn": true,
+  "hasAttachments": false,
+  "subject": "Sprint grooming and planning",
+  "bodyPreview": "",
+  "importance": "normal",
+  "sensitivity": "normal",
+  "isAllDay": false,
+  "isCancelled": false,
+  "isOrganizer": true,
+  "responseRequested": true,
+  "seriesMasterId": null,
+  "showAs": "busy",
+  "type": "seriesMaster",
+  "webLink": "https://outlook.live.com/owa/?itemid=REDACTED&exvsurl=1&path=/calendar/item",
+  "onlineMeetingUrl": null,
+  "isOnlineMeeting": false,
+  "onlineMeetingProvider": "unknown",
+  "allowNewTimeProposals": true,
+  "occurrenceId": null,
+  "isDraft": false,
+  "hideAttendees": false,
+  "responseStatus": {
+    "response": "organizer",
+    "time": "0001-01-01T00:00:00Z"
+  },
+  "body": {
+    "contentType": "text",
+    "content": "\r\n"
+  },
+  "start": {
+    "dateTime": "2026-03-27T20:05:00.0000000",
+    "timeZone": "UTC"
+  },
+  "end": {
+    "dateTime": "2026-03-27T22:00:00.0000000",
+    "timeZone": "UTC"
+  },
+  "location": {
+    "displayName": "",
+    "locationType": "default",
+    "uniqueIdType": "unknown",
+    "address": {},
+    "coordinates": {}
+  },
+  "locations": [],
+  "recurrence": {
+    "pattern": {
+      "type": "weekly",
+      "interval": 2,
+      "month": 0,
+      "dayOfMonth": 0,
+      "daysOfWeek": ["friday"],
+      "firstDayOfWeek": "sunday",
+      "index": "first"
+    },
+    "range": {
+      "type": "endDate",
+      "startDate": "2026-03-27",
+      "endDate": "2027-03-20",
+      "recurrenceTimeZone": "Pacific Standard Time",
+      "numberOfOccurrences": 0
+    }
+  },
+  "attendees": [],
+  "organizer": {
+    "emailAddress": {
+      "name": "Organizer Name",
+      "address": "organizer@example.com"
+    }
+  },
+  "onlineMeeting": null
+}
