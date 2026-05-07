@@ -515,19 +515,30 @@ describe('stripZwspPreheader — ZWSP preheader stripping (structural surprise 6
     expect(stripped).toContain('[SoFi]');
   });
 
-  it('KNOWN GAP (Phase 3 Step 2 for KAREN): real-shape preheader is NOT stripped by current regex', () => {
-    // This test EXISTS to document the gap. Once KAREN widens the regex, flip these
-    // assertions to expect successful strip. Until then, this captures the current bug.
+  it('real-shape interleaved preheader IS stripped by widened regex (Phase 3 Step 2)', () => {
+    // Phase 3 Step 2 widened ZWSP_PREHEADER_RE to accept whitespace+ZWSP interleaved runs
+    // (gated by lookahead requiring ≥20 ZWSPs in the run). The real SoFi body starts with
+    // SPACE, then alternates SPACE+ZWSP for 292 chars (143 ZWSPs interleaved with 149
+    // spaces) before the actual content `[SoFi]\r\n`. Confirm strip succeeds.
     const stripped = stripZwspPreheader(raw.body.content);
-    // Currently: regex does not match → string unchanged → still starts with the leading space
-    expect(stripped).toBe(raw.body.content);
+    // Strip must shrink the string
+    expect(stripped.length).toBeLessThan(raw.body.content.length);
+    // The 292-byte preheader run is gone
+    expect(raw.body.content.length - stripped.length).toBeGreaterThanOrEqual(280);
+    // Stripped output no longer matches the leading-preheader signature
+    expect(stripped).not.toMatch(/^(?=(?:[\s‌]*‌){20,})[\s‌]+/);
+    // Real content surfaces at index 0 — `[SoFi]` was after the preheader
+    expect(stripped.startsWith('[SoFi]')).toBe(true);
   });
 
-  it('get-mail-message compactor decodes safelinks even when ZWSP strip is no-op', () => {
-    // Compactor is robust: safelinks decoder runs regardless of ZWSP strip outcome.
+  it('get-mail-message compactor decodes safelinks AND strips ZWSP preheader (Phase 3 Step 2)', () => {
+    // Phase 3 Step 2: with widened regex, the compact body has the preheader stripped
+    // AND safelinks decoded. Both transforms apply.
     const compact = COMPACTORS['get-mail-message'](raw) as { body: { content: string } };
     // Safelinks decoded
     expect(compact.body.content).not.toContain('safelinks.protection.outlook.com');
+    // ZWSP preheader stripped — content starts with `[SoFi]`, not whitespace+ZWSP
+    expect(compact.body.content.startsWith('[SoFi]')).toBe(true);
     // Real content preserved
     expect(compact.body.content).toContain('[SoFi]');
     expect(compact.body.content).toContain('SoFi Bank');

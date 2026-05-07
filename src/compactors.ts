@@ -119,15 +119,22 @@ export function decodeSafelinks(text: string): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Regex matching a leading block of U+200C ZERO WIDTH NON-JOINER characters at the start of
- * a string, optionally followed by whitespace. Requires at least 20 consecutive ZWSPs to avoid
- * false-positives on legitimate ZWSP use in body text.
+ * Regex matching a leading block of mixed whitespace + U+200C ZERO WIDTH NON-JOINER characters
+ * at the start of a string. The lookahead requires the run to contain at least 20 ZWSPs to avoid
+ * false-positives on legitimate leading whitespace in short bodies.
  *
  * Context: SoFi, Chase, Discover and other financial senders use 127–150 ZWSPs as a preheader
  * suppressor — flooding the email client's ~140-char bodyPreview slot so the real content
  * isn't shown as preview text. The ZWSP block carries no information.
+ *
+ * Phase 3 Step 2 widening: real production bodies start with a SPACE then alternate
+ * SPACE+ZWSP+SPACE+ZWSP for ~290 chars (143 ZWSPs interleaved with 149 spaces in the SoFi
+ * fixture). The original regex `^[‌]{20,}\s*` only matched a CONTIGUOUS leading run of ZWSPs
+ * and missed the real interleaved shape. The widened pattern accepts any whitespace-or-ZWSP
+ * leading run, gated by a lookahead that counts ≥20 ZWSPs in that run — keeps the
+ * preheader-signature semantics, drops the contiguous-only assumption.
  */
-const ZWSP_PREHEADER_RE = /^[‌]{20,}\s*/;
+const ZWSP_PREHEADER_RE = /^(?=(?:[\s‌]*‌){20,})[\s‌]+/;
 
 /**
  * Strip the ZWSP preheader from a mail body string.
