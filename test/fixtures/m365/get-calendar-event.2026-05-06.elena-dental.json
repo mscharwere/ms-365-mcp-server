@@ -1,11 +1,11 @@
 {
   "id": "AQMkADAwATMwMAItYmUzMi0yMDk0LTAwAi0wMAoARgAAA-XM1A9KEcJHpm_5L8rfopcHALvbb4DobT5FoQ9czFQAzPgAAAIBDQAAALvbb4DobT5FoQ9czFQAzPgACNPz45UAAAA=",
   "categories": [],
-  "subject": "Elena — Dental Cleaning, Dr. Audrey Tatt (Carlos driving)",
+  "subject": "[Spouse] — Dental Cleaning, Dr. [Dentist Name] ([User] driving)",
   "isAllDay": false,
   "body": {
     "contentType": "text",
-    "content": "Elena's routine dental cleaning. Carlos is driving her to the appointment.\n\nDr. Audrey K. Tatt, DDS\n15419 NE 20th St Ste 206\nBellevue, WA 98007\nPhone: (425) 747-9840"
+    "content": "[Spouse]'s routine dental cleaning. [User] is driving her to the appointment.\n\nDr. [Dentist Name], DDS\n<redacted address>\nPhone: XXX-XXX-XXXX"
   },
   "start": {
     "dateTime": "2026-05-06T14:00:00.0000000",
@@ -16,17 +16,17 @@
     "timeZone": "America/Los_Angeles"
   },
   "location": {
-    "displayName": "Audrey K. Tatt, DDS — 15419 NE 20th St Ste 206, Bellevue, WA 98007",
+    "displayName": "Dr. [Dentist Name], DDS — <redacted address>",
     "locationUri": "",
     "locationType": "default",
-    "uniqueId": "Audrey K. Tatt, DDS — 15419 NE 20th St Ste 206, Bellevue, WA 98007",
+    "uniqueId": "Dr. [Dentist Name], DDS — <redacted address>",
     "uniqueIdType": "private",
     "address": {
-      "street": "15419 NE 20th St Ste 206",
-      "city": "Bellevue",
+      "street": "<redacted address>",
+      "city": "<redacted city>",
       "state": "WA",
       "countryOrRegion": "United States",
-      "postalCode": "98007"
+      "postalCode": "XXXXX"
     },
     "coordinates": {}
   },
@@ -34,8 +34,8 @@
   "attendees": [],
   "organizer": {
     "emailAddress": {
-      "name": "Carlos Armando Perez Enriquez",
-      "address": "mscharwere@live.com"
+      "name": "[User]",
+      "address": "recipient@example.com"
     }
   }
 }
