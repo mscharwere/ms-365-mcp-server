@@ -630,7 +630,7 @@ const compactListMailMessages: Compactor = (raw) => compactList(raw, projectMail
 // Existing Graph endpoints already supported via identity; promoted here because Graph
 // returns 25–40 metadata fields per contact (changeKey, parentFolderId, yomi*, fax numbers,
 // imAddresses, profession, manager, assistantName, spouseName, generation, initials, etc.).
-// Typical contact object: ~2.2KB raw → ~0.6KB compacted (~70% reduction).
+// Typical contact object: ~1.1–1.6KB raw → ~0.6–0.8KB compacted (~45–55% reduction).
 //
 // /me/people uses a different shape (scoredEmailAddresses, personType, phones with type tags)
 // so it gets its own projector.
