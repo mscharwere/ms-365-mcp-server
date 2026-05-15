@@ -383,6 +383,147 @@ function projectMailMessage(msg: JsonValue): JsonValue {
 }
 
 // ---------------------------------------------------------------------------
+// Contact projection helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Project a single Outlook contact (/me/contacts).
+ *
+ * PRESERVED:
+ *   id, displayName, givenName, surname, middleName, nickName,
+ *   emailAddresses (name + address only — drop @odata bag),
+ *   businessPhones, homePhones, mobilePhone,
+ *   homeAddress, businessAddress, otherAddress (street/city/state/postalCode/countryOrRegion only),
+ *   companyName, department, jobTitle, officeLocation,
+ *   personalNotes, birthday, fileAs, categories
+ *
+ * DROPPED (Graph metadata + rarely useful fields):
+ *   @odata.context, @odata.etag, createdDateTime, lastModifiedDateTime, changeKey,
+ *   parentFolderId, imAddresses, yomiGivenName, yomiSurname, yomiCompanyName,
+ *   title (honorific — almost always null), initials, generation,
+ *   profession, manager, assistantName, spouseName, children,
+ *   business/home/other fax numbers
+ */
+function projectContact(c: JsonValue): JsonValue {
+  if (!c || typeof c !== 'object') return c;
+
+  const out: JsonValue = {};
+
+  // Identity
+  if (c.id !== undefined) out.id = c.id;
+
+  // Names
+  if (c.displayName !== undefined) out.displayName = c.displayName;
+  if (c.givenName !== undefined) out.givenName = c.givenName;
+  if (c.surname !== undefined) out.surname = c.surname;
+  if (c.middleName !== undefined) out.middleName = c.middleName;
+  if (c.nickName !== undefined) out.nickName = c.nickName;
+  if (c.fileAs !== undefined) out.fileAs = c.fileAs;
+
+  // Email — strip Graph @odata bag, keep name+address only
+  if (c.emailAddresses !== undefined && Array.isArray(c.emailAddresses)) {
+    out.emailAddresses = c.emailAddresses.map((e: JsonValue) => ({
+      name: e?.name,
+      address: e?.address,
+    }));
+  }
+
+  // Phones — preserve arrays as-is (already plain strings)
+  if (c.businessPhones !== undefined) out.businessPhones = c.businessPhones;
+  if (c.homePhones !== undefined) out.homePhones = c.homePhones;
+  if (c.mobilePhone !== undefined) out.mobilePhone = c.mobilePhone;
+
+  // Addresses — project to a minimal shape
+  const projectAddress = (a: JsonValue): JsonValue => {
+    if (!a || typeof a !== 'object') return a;
+    const o: JsonValue = {};
+    if (a.street !== undefined) o.street = a.street;
+    if (a.city !== undefined) o.city = a.city;
+    if (a.state !== undefined) o.state = a.state;
+    if (a.postalCode !== undefined) o.postalCode = a.postalCode;
+    if (a.countryOrRegion !== undefined) o.countryOrRegion = a.countryOrRegion;
+    return o;
+  };
+  if (c.homeAddress !== undefined) out.homeAddress = projectAddress(c.homeAddress);
+  if (c.businessAddress !== undefined) out.businessAddress = projectAddress(c.businessAddress);
+  if (c.otherAddress !== undefined) out.otherAddress = projectAddress(c.otherAddress);
+
+  // Employer / role
+  if (c.companyName !== undefined) out.companyName = c.companyName;
+  if (c.department !== undefined) out.department = c.department;
+  if (c.jobTitle !== undefined) out.jobTitle = c.jobTitle;
+  if (c.officeLocation !== undefined) out.officeLocation = c.officeLocation;
+
+  // Notes / misc
+  if (c.personalNotes !== undefined) out.personalNotes = c.personalNotes;
+  if (c.birthday !== undefined) out.birthday = c.birthday;
+  if (c.categories !== undefined) out.categories = c.categories;
+
+  return out;
+}
+
+/**
+ * Project a single /me/people item ("relevant person").
+ *
+ * Different shape from /me/contacts: scoredEmailAddresses, phones with type tags,
+ * personType (Person/Group), relevanceScore.
+ *
+ * PRESERVED:
+ *   id, displayName, givenName, surname,
+ *   scoredEmailAddresses (address + relevanceScore — drop selectionLikelihood),
+ *   phones (number + type only),
+ *   companyName, jobTitle, department, officeLocation,
+ *   personType (class + subclass for disambiguating Person vs Group)
+ *
+ * DROPPED:
+ *   @odata.* metadata, imAddress, profession, userPrincipalName, yomi* fields,
+ *   birthday (almost always empty on /me/people), postalAddresses (rarely populated),
+ *   websites, isFavorite (deprecated field)
+ */
+function projectPerson(p: JsonValue): JsonValue {
+  if (!p || typeof p !== 'object') return p;
+
+  const out: JsonValue = {};
+
+  if (p.id !== undefined) out.id = p.id;
+  if (p.displayName !== undefined) out.displayName = p.displayName;
+  if (p.givenName !== undefined) out.givenName = p.givenName;
+  if (p.surname !== undefined) out.surname = p.surname;
+
+  // Email — drop selectionLikelihood (Graph's heuristic flag, low signal)
+  if (p.scoredEmailAddresses !== undefined && Array.isArray(p.scoredEmailAddresses)) {
+    out.scoredEmailAddresses = p.scoredEmailAddresses.map((e: JsonValue) => ({
+      address: e?.address,
+      relevanceScore: e?.relevanceScore,
+    }));
+  }
+
+  // Phones — keep number + type only
+  if (p.phones !== undefined && Array.isArray(p.phones)) {
+    out.phones = p.phones.map((ph: JsonValue) => ({
+      type: ph?.type,
+      number: ph?.number,
+    }));
+  }
+
+  // Employer / role
+  if (p.companyName !== undefined) out.companyName = p.companyName;
+  if (p.jobTitle !== undefined) out.jobTitle = p.jobTitle;
+  if (p.department !== undefined) out.department = p.department;
+  if (p.officeLocation !== undefined) out.officeLocation = p.officeLocation;
+
+  // Person vs Group disambiguation
+  if (p.personType !== undefined) {
+    out.personType = {
+      class: p.personType?.class,
+      subclass: p.personType?.subclass,
+    };
+  }
+
+  return out;
+}
+
+// ---------------------------------------------------------------------------
 // Top-level response wrappers
 // ---------------------------------------------------------------------------
 
@@ -482,6 +623,22 @@ const compactGetMailMessage: Compactor = (raw) => projectMailMessage(raw);
  * is identical — if the bug is ever fixed, compaction works correctly.
  */
 const compactListMailMessages: Compactor = (raw) => compactList(raw, projectMailMessage);
+
+// ---------------------------------------------------------------------------
+// Contacts + People compactors (Phase 3 Step 2 — added 2026-05-15)
+//
+// Existing Graph endpoints already supported via identity; promoted here because Graph
+// returns 25–40 metadata fields per contact (changeKey, parentFolderId, yomi*, fax numbers,
+// imAddresses, profession, manager, assistantName, spouseName, generation, initials, etc.).
+// Typical contact object: ~1.1–1.6KB raw → ~0.6–0.8KB compacted (~45–55% reduction).
+//
+// /me/people uses a different shape (scoredEmailAddresses, personType, phones with type tags)
+// so it gets its own projector.
+// ---------------------------------------------------------------------------
+
+const compactListOutlookContacts: Compactor = (raw) => compactList(raw, projectContact);
+const compactGetOutlookContact: Compactor = (raw) => projectContact(raw);
+const compactListRelevantPeople: Compactor = (raw) => compactList(raw, projectPerson);
 
 // ---------------------------------------------------------------------------
 // Exhaustive compactor record for all 270 Graph tools
@@ -903,7 +1060,7 @@ export const COMPACTORS: Record<ToolAlias, Compactor> = {
   'get-my-presence': identity,
   'get-onenote-page-content': identity,
   'get-online-meeting': identity,
-  'get-outlook-contact': identity,
+  'get-outlook-contact': compactGetOutlookContact,
   'get-planner-bucket': identity,
   'get-planner-plan': identity,
   'get-planner-task': identity,
@@ -980,12 +1137,12 @@ export const COMPACTORS: Record<ToolAlias, Compactor> = {
   'list-onenote-section-pages': identity,
   'list-online-meetings': identity,
   'list-outlook-categories': identity,
-  'list-outlook-contacts': identity,
+  'list-outlook-contacts': compactListOutlookContacts,
   'list-pinned-chat-messages': identity,
   'list-plan-buckets': identity,
   'list-plan-tasks': identity,
   'list-planner-tasks': identity,
-  'list-relevant-people': identity,
+  'list-relevant-people': compactListRelevantPeople,
   'list-room-list-rooms': identity,
   'list-sensitivity-labels': identity,
   'list-shared-calendar-events': identity,

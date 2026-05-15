@@ -24,7 +24,7 @@ export const TOOL_CATEGORIES: Record<string, ToolCategory> = {
   personal: {
     name: 'personal',
     pattern:
-      /mail|calendar|drive|contact|todo|onenote|attachment|draft|event|file|folder|search|query|download-bytes|parse-teams-url/i,
+      /mail|calendar|drive|contact|people|todo|onenote|attachment|draft|event|file|folder|search|query|download-bytes|parse-teams-url/i,
     description:
       'Personal productivity tools (mail, calendar, files, contacts, tasks, notes, search)',
   },
@@ -44,6 +44,11 @@ export const TOOL_CATEGORIES: Record<string, ToolCategory> = {
     name: 'contacts',
     pattern: /contact/i,
     description: 'Outlook contacts management',
+  },
+  people: {
+    name: 'people',
+    pattern: /people/i,
+    description: 'Relevant people (/me/people) — based on communication patterns',
   },
   tasks: {
     name: 'tasks',

@@ -1074,7 +1074,7 @@
     "pathPattern": "/me/people",
     "method": "get",
     "toolName": "list-relevant-people",
-    "workScopes": ["People.Read"],
+    "scopes": ["People.Read"],
     "llmTip": "Lists people most relevant to the current user, ordered by relevance. Based on communication patterns, collaboration, and business relationships. Each person has displayName, emailAddresses, jobTitle, department, officeLocation. Use $search to find specific people by name. Use $top to limit results."
   },
   {
