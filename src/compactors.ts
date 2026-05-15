@@ -473,7 +473,7 @@ function projectContact(c: JsonValue): JsonValue {
  *   scoredEmailAddresses (address + relevanceScore — drop selectionLikelihood),
  *   phones (number + type only),
  *   companyName, jobTitle, department, officeLocation,
- *   personType (objectType + class for disambiguating Person vs Group)
+ *   personType (class + subclass for disambiguating Person vs Group)
  *
  * DROPPED:
  *   @odata.* metadata, imAddress, profession, userPrincipalName, yomi* fields,

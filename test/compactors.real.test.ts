@@ -855,6 +855,240 @@ describe('list-mail-messages compactor — same projection as list-mail-folder-m
 });
 
 // ---------------------------------------------------------------------------
+// Phase 3 Step 3 — contacts + /me/people projectors (added 2026-05-15)
+//
+// Fixtures are FABRICATED (PII-free synthetic data) shaped to match real Graph
+// response structure: full metadata bag (changeKey, parentFolderId, yomi* fields,
+// fax numbers, @odata.etag, imAddresses, profession, generation, manager,
+// assistantName, spouseName, title, initials, children) for /me/contacts; and
+// scoredEmailAddresses.selectionLikelihood, websites, postalAddresses,
+// userPrincipalName, imAddress, isFavorite, yomiCompany, etc. for /me/people.
+//
+// These tests verify projection correctness AND byte-ratio reduction.
+// ---------------------------------------------------------------------------
+
+describe('list-outlook-contacts compactor — fabricated fixture', () => {
+  const raw = loadFixture('list-outlook-contacts.2026-05-15.fabricated.json') as {
+    value: Array<Record<string, unknown>>;
+  };
+  const compact = COMPACTORS['list-outlook-contacts'](raw) as {
+    value: Array<Record<string, unknown>>;
+  };
+
+  it('returns all 2 contacts', () => {
+    expect(compact.value.length).toBe(2);
+  });
+
+  it('preserves id, displayName, givenName, surname', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    const r0 = raw.value[0] as Record<string, unknown>;
+    expect(c0.id).toBe(r0.id);
+    expect(c0.displayName).toBe(r0.displayName);
+    expect(c0.givenName).toBe(r0.givenName);
+    expect(c0.surname).toBe(r0.surname);
+  });
+
+  it('preserves middleName, nickName, fileAs, categories, birthday, personalNotes', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    expect(c0.middleName).toBe('Marie');
+    expect(c0.nickName).toBe('Janie');
+    expect(c0.fileAs).toBe('Doe, Jane');
+    expect(c0.categories).toEqual(['Family']);
+    expect(c0.birthday).toBe('1985-07-14T11:59:00Z');
+    expect(c0.personalNotes).toContain('OpenSync 2024');
+  });
+
+  it('emailAddresses keep name+address only — drops @odata.type bag', () => {
+    const c0 = compact.value[0] as {
+      emailAddresses: Array<Record<string, unknown>>;
+    };
+    expect(c0.emailAddresses.length).toBe(2);
+    for (const e of c0.emailAddresses) {
+      expect(e.name).toBeDefined();
+      expect(e.address).toBeDefined();
+      expect(e['@odata.type']).toBeUndefined();
+    }
+  });
+
+  it('addresses keep only street/city/state/postalCode/countryOrRegion', () => {
+    const c0 = compact.value[0] as {
+      homeAddress: Record<string, unknown>;
+      businessAddress: Record<string, unknown>;
+    };
+    expect(c0.homeAddress.street).toBe('123 Maple Street');
+    expect(c0.homeAddress.city).toBe('Springfield');
+    expect(c0.homeAddress.state).toBe('OR');
+    expect(c0.homeAddress.postalCode).toBe('97477');
+    expect(c0.homeAddress.countryOrRegion).toBe('United States');
+    expect(c0.businessAddress.city).toBe('Seattle');
+  });
+
+  it('preserves phones (businessPhones, homePhones, mobilePhone)', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    expect(c0.businessPhones).toEqual(['+1 555 010 1200']);
+    expect(c0.homePhones).toEqual(['+1 555 010 4421']);
+    expect(c0.mobilePhone).toBe('+1 555 010 9087');
+  });
+
+  it('preserves companyName, department, jobTitle, officeLocation', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    expect(c0.companyName).toBe('Acme Widgets Inc.');
+    expect(c0.department).toBe('Product');
+    expect(c0.jobTitle).toBe('Senior Product Manager');
+    expect(c0.officeLocation).toBe('Building 4 / 3W-201');
+  });
+
+  it('drops Graph metadata: @odata.etag, changeKey, createdDateTime, lastModifiedDateTime, parentFolderId', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    expect(c0['@odata.etag']).toBeUndefined();
+    expect(c0.changeKey).toBeUndefined();
+    expect(c0.createdDateTime).toBeUndefined();
+    expect(c0.lastModifiedDateTime).toBeUndefined();
+    expect(c0.parentFolderId).toBeUndefined();
+  });
+
+  it('drops rarely-useful fields: yomi*, imAddresses, title, initials, generation, profession, manager, assistantName, spouseName, children, fax numbers, businessHomePage', () => {
+    const c0 = compact.value[0] as Record<string, unknown>;
+    expect(c0.yomiGivenName).toBeUndefined();
+    expect(c0.yomiSurname).toBeUndefined();
+    expect(c0.yomiCompanyName).toBeUndefined();
+    expect(c0.imAddresses).toBeUndefined();
+    expect(c0.title).toBeUndefined();
+    expect(c0.initials).toBeUndefined();
+    expect(c0.generation).toBeUndefined();
+    expect(c0.profession).toBeUndefined();
+    expect(c0.manager).toBeUndefined();
+    expect(c0.assistantName).toBeUndefined();
+    expect(c0.spouseName).toBeUndefined();
+    expect(c0.children).toBeUndefined();
+    expect(c0.homeFaxNumber).toBeUndefined();
+    expect(c0.businessFaxNumber).toBeUndefined();
+    expect(c0.otherFaxNumber).toBeUndefined();
+    expect(c0.businessHomePage).toBeUndefined();
+  });
+});
+
+describe('get-outlook-contact compactor — fabricated single contact', () => {
+  const list = loadFixture('list-outlook-contacts.2026-05-15.fabricated.json') as {
+    value: Array<Record<string, unknown>>;
+  };
+  const raw = list.value[1] as Record<string, unknown>;
+  const compact = COMPACTORS['get-outlook-contact'](raw) as Record<string, unknown>;
+
+  it('preserves id and core identity', () => {
+    expect(compact.id).toBe(raw.id);
+    expect(compact.displayName).toBe('Daniel Park');
+    expect(compact.givenName).toBe('Daniel');
+    expect(compact.surname).toBe('Park');
+  });
+
+  it('omits null/empty optional fields gracefully (middleName, nickName, birthday not in compact when null)', () => {
+    // Compactor uses `!== undefined` guard so explicit `null` from Graph DOES carry through
+    // (matches existing pattern in projectMailMessage). middleName/nickName were null in raw.
+    expect(compact.middleName).toBe(null);
+    expect(compact.nickName).toBe(null);
+  });
+
+  it('drops title even when populated ("Dr." in raw)', () => {
+    expect(raw.title).toBe('Dr.');
+    expect(compact.title).toBeUndefined();
+  });
+});
+
+describe('list-relevant-people compactor — fabricated fixture', () => {
+  const raw = loadFixture('list-relevant-people.2026-05-15.fabricated.json') as {
+    value: Array<Record<string, unknown>>;
+  };
+  const compact = COMPACTORS['list-relevant-people'](raw) as {
+    value: Array<Record<string, unknown>>;
+  };
+
+  it('returns all 3 people (2 Person + 1 Group)', () => {
+    expect(compact.value.length).toBe(3);
+  });
+
+  it('preserves id, displayName, givenName, surname', () => {
+    const p0 = compact.value[0] as Record<string, unknown>;
+    expect(p0.id).toBe('0e3c1f9a-7b88-44f2-9c66-001122334455');
+    expect(p0.displayName).toBe('Alice Hernandez');
+    expect(p0.givenName).toBe('Alice');
+    expect(p0.surname).toBe('Hernandez');
+  });
+
+  it('scoredEmailAddresses keep address + relevanceScore — drops selectionLikelihood', () => {
+    const p0 = compact.value[0] as {
+      scoredEmailAddresses: Array<Record<string, unknown>>;
+    };
+    expect(p0.scoredEmailAddresses.length).toBe(2);
+    for (const e of p0.scoredEmailAddresses) {
+      expect(e.address).toBeDefined();
+      expect(e.relevanceScore).toBeDefined();
+      expect(e.selectionLikelihood).toBeUndefined();
+    }
+    expect(p0.scoredEmailAddresses[0].address).toBe('alice.hernandez@initech.example.com');
+    expect(p0.scoredEmailAddresses[0].relevanceScore).toBe(-19.4);
+  });
+
+  it('phones keep type + number only', () => {
+    const p0 = compact.value[0] as {
+      phones: Array<Record<string, unknown>>;
+    };
+    expect(p0.phones.length).toBe(2);
+    expect(p0.phones[0]).toEqual({ type: 'business', number: '+1 555 020 1100' });
+    expect(p0.phones[1]).toEqual({ type: 'mobile', number: '+1 555 020 9988' });
+  });
+
+  it('preserves companyName, jobTitle, department, officeLocation', () => {
+    const p0 = compact.value[0] as Record<string, unknown>;
+    expect(p0.companyName).toBe('Initech Systems');
+    expect(p0.jobTitle).toBe('Director of Engineering');
+    expect(p0.department).toBe('Engineering');
+    expect(p0.officeLocation).toBe('HQ-3 / Floor 4');
+  });
+
+  it('personType is projected to class + subclass (Person/OrganizationUser)', () => {
+    const p0 = compact.value[0] as {
+      personType: Record<string, unknown>;
+    };
+    expect(p0.personType.class).toBe('Person');
+    expect(p0.personType.subclass).toBe('OrganizationUser');
+  });
+
+  it('personType disambiguates Group from Person (3rd entry is UnifiedGroup)', () => {
+    const p2 = compact.value[2] as {
+      personType: Record<string, unknown>;
+      displayName: string;
+    };
+    expect(p2.displayName).toBe('Project Falcon Team');
+    expect(p2.personType.class).toBe('Group');
+    expect(p2.personType.subclass).toBe('UnifiedGroup');
+  });
+
+  it('drops userPrincipalName, imAddress, profession, isFavorite, birthday, postalAddresses, websites, yomiCompany', () => {
+    const p0 = compact.value[0] as Record<string, unknown>;
+    expect(p0.userPrincipalName).toBeUndefined();
+    expect(p0.imAddress).toBeUndefined();
+    expect(p0.profession).toBeUndefined();
+    expect(p0.isFavorite).toBeUndefined();
+    expect(p0.birthday).toBeUndefined();
+    expect(p0.postalAddresses).toBeUndefined();
+    expect(p0.websites).toBeUndefined();
+    expect(p0.yomiCompany).toBeUndefined();
+  });
+
+  it('userPrincipalName dropped even for external (Group/PersonalContact) where UPN is empty — scored email is the identity', () => {
+    // External contact (Robert Chen, PersonalContact) has userPrincipalName="" in raw.
+    // Identity for external contacts comes from scoredEmailAddresses, not UPN.
+    const p1 = compact.value[1] as {
+      scoredEmailAddresses: Array<Record<string, unknown>>;
+      userPrincipalName?: unknown;
+    };
+    expect(p1.userPrincipalName).toBeUndefined();
+    expect(p1.scoredEmailAddresses[0].address).toBe('rchen@pearsonlowe.example.com');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Exhaustiveness smoke test — compactor record covers all 270 tools
 // ---------------------------------------------------------------------------
 

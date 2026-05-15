@@ -1,0 +1,124 @@
+{
+  "_fixture_comment": "FABRICATED fixture for /me/people. PII-free synthetic data shaped to match real Graph response: scoredEmailAddresses with selectionLikelihood, phones with type, full personType (class+subclass), plus the rarely-useful fields dropped by projectPerson (imAddress, profession, userPrincipalName, yomi* fields, birthday, postalAddresses, websites, isFavorite, @odata.*). Generated 2026-05-15 for projectPerson byte-ratio assertions.",
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('me')/people",
+  "value": [
+    {
+      "id": "0e3c1f9a-7b88-44f2-9c66-001122334455",
+      "displayName": "Alice Hernandez",
+      "givenName": "Alice",
+      "surname": "Hernandez",
+      "birthday": "",
+      "personNotes": "",
+      "isFavorite": false,
+      "jobTitle": "Director of Engineering",
+      "companyName": "Initech Systems",
+      "yomiCompany": "",
+      "department": "Engineering",
+      "officeLocation": "HQ-3 / Floor 4",
+      "profession": "",
+      "userPrincipalName": "alice.hernandez@initech.example.com",
+      "imAddress": "sip:alice.hernandez@initech.example.com",
+      "scoredEmailAddresses": [
+        {
+          "address": "alice.hernandez@initech.example.com",
+          "relevanceScore": -19.4,
+          "selectionLikelihood": "notSpecified"
+        },
+        {
+          "address": "ahernandez@personal.example.net",
+          "relevanceScore": -34.2,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+        {
+          "type": "business",
+          "number": "+1 555 020 1100"
+        },
+        {
+          "type": "mobile",
+          "number": "+1 555 020 9988"
+        }
+      ],
+      "postalAddresses": [],
+      "websites": [],
+      "personType": {
+        "class": "Person",
+        "subclass": "OrganizationUser"
+      }
+    },
+    {
+      "id": "f29ab014-3d22-4cae-bd17-665544332211",
+      "displayName": "Robert Chen",
+      "givenName": "Robert",
+      "surname": "Chen",
+      "birthday": "",
+      "personNotes": "",
+      "isFavorite": false,
+      "jobTitle": "External Counsel",
+      "companyName": "Pearson & Lowe LLP",
+      "yomiCompany": "",
+      "department": "",
+      "officeLocation": "",
+      "profession": "",
+      "userPrincipalName": "",
+      "imAddress": "",
+      "scoredEmailAddresses": [
+        {
+          "address": "rchen@pearsonlowe.example.com",
+          "relevanceScore": -27.0,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [
+        {
+          "type": "business",
+          "number": "+1 555 020 4040"
+        }
+      ],
+      "postalAddresses": [],
+      "websites": [
+        {
+          "type": "other",
+          "address": "https://pearsonlowe.example.com",
+          "displayName": ""
+        }
+      ],
+      "personType": {
+        "class": "Person",
+        "subclass": "PersonalContact"
+      }
+    },
+    {
+      "id": "11aa22bb-33cc-44dd-55ee-66ff77889900",
+      "displayName": "Project Falcon Team",
+      "givenName": "",
+      "surname": "",
+      "birthday": "",
+      "personNotes": "",
+      "isFavorite": false,
+      "jobTitle": "",
+      "companyName": "",
+      "yomiCompany": "",
+      "department": "",
+      "officeLocation": "",
+      "profession": "",
+      "userPrincipalName": "",
+      "imAddress": "",
+      "scoredEmailAddresses": [
+        {
+          "address": "project-falcon@initech.example.com",
+          "relevanceScore": -41.7,
+          "selectionLikelihood": "notSpecified"
+        }
+      ],
+      "phones": [],
+      "postalAddresses": [],
+      "websites": [],
+      "personType": {
+        "class": "Group",
+        "subclass": "UnifiedGroup"
+      }
+    }
+  ]
+}

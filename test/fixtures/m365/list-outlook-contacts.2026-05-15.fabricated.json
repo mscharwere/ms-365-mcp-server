@@ -1,0 +1,129 @@
+{
+  "_fixture_comment": "FABRICATED fixture for /me/contacts. PII-free synthetic data shaped to match real Graph response: full metadata bag (changeKey, parentFolderId, @odata.etag, yomi* fields, fax numbers, imAddresses, profession, manager, assistantName, spouseName, generation, initials, title, children) plus all the useful fields. Generated 2026-05-15 for projectContact byte-ratio assertions.",
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('me')/contacts",
+  "value": [
+    {
+      "@odata.etag": "W/\"EQAAABYAAABPAAAAAAAAAAAAAAA=\"",
+      "id": "AAMkAGI2NDg3ZGE5LWE3YzAtNGY1ZS04NDM5LWY5MDFlYjNiMDc1MgBGAAAAAAA1ZmtSCgAA",
+      "createdDateTime": "2025-09-12T18:03:11Z",
+      "lastModifiedDateTime": "2026-04-22T14:19:54Z",
+      "changeKey": "EQAAABYAAABPAAAAAAAAAAAAAAA=",
+      "categories": ["Family"],
+      "parentFolderId": "AAMkAGI2NDg3ZGE5LWE3YzAtNGY1ZS04NDM5LWY5MDFlYjNiMDc1MgAuAAAAAAA1ZmtSAAA",
+      "birthday": "1985-07-14T11:59:00Z",
+      "fileAs": "Doe, Jane",
+      "displayName": "Jane Doe",
+      "givenName": "Jane",
+      "initials": null,
+      "middleName": "Marie",
+      "nickName": "Janie",
+      "surname": "Doe",
+      "title": null,
+      "yomiGivenName": null,
+      "yomiSurname": null,
+      "yomiCompanyName": null,
+      "generation": null,
+      "imAddresses": [],
+      "jobTitle": "Senior Product Manager",
+      "companyName": "Acme Widgets Inc.",
+      "department": "Product",
+      "officeLocation": "Building 4 / 3W-201",
+      "profession": "Product Management",
+      "businessHomePage": "https://www.acme-widgets.example.com",
+      "assistantName": null,
+      "manager": null,
+      "spouseName": null,
+      "personalNotes": "Met at OpenSync 2024. Prefers async email. Vegan, no nuts.",
+      "children": [],
+      "homePhones": ["+1 555 010 4421"],
+      "mobilePhone": "+1 555 010 9087",
+      "businessPhones": ["+1 555 010 1200"],
+      "homeFaxNumber": null,
+      "businessFaxNumber": null,
+      "otherFaxNumber": null,
+      "emailAddresses": [
+        {
+          "name": "Jane Doe",
+          "address": "jane.doe@example.com",
+          "@odata.type": "#microsoft.graph.emailAddress"
+        },
+        {
+          "name": "Jane Doe (Acme)",
+          "address": "jdoe@acme-widgets.example.com",
+          "@odata.type": "#microsoft.graph.emailAddress"
+        }
+      ],
+      "homeAddress": {
+        "street": "123 Maple Street",
+        "city": "Springfield",
+        "state": "OR",
+        "countryOrRegion": "United States",
+        "postalCode": "97477"
+      },
+      "businessAddress": {
+        "street": "500 Acme Plaza",
+        "city": "Seattle",
+        "state": "WA",
+        "countryOrRegion": "United States",
+        "postalCode": "98109"
+      },
+      "otherAddress": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "countryOrRegion": null,
+        "postalCode": null
+      }
+    },
+    {
+      "@odata.etag": "W/\"EQAAABYAAABPAAAAAAAAAAAAAAA=\"",
+      "id": "AAMkAGI2NDg3ZGE5LWE3YzAtNGY1ZS04NDM5LWY5MDFlYjNiMDc1MgBGAAAAAAA1ZmtSCgBB",
+      "createdDateTime": "2024-02-08T09:41:22Z",
+      "lastModifiedDateTime": "2026-03-15T08:01:09Z",
+      "changeKey": "EQAAABYAAABPAAAAAAAAAAAAAAB=",
+      "categories": [],
+      "parentFolderId": "AAMkAGI2NDg3ZGE5LWE3YzAtNGY1ZS04NDM5LWY5MDFlYjNiMDc1MgAuAAAAAAA1ZmtSAAA",
+      "birthday": null,
+      "fileAs": "Park, Daniel",
+      "displayName": "Daniel Park",
+      "givenName": "Daniel",
+      "initials": "DP",
+      "middleName": null,
+      "nickName": null,
+      "surname": "Park",
+      "title": "Dr.",
+      "yomiGivenName": null,
+      "yomiSurname": null,
+      "yomiCompanyName": null,
+      "generation": null,
+      "imAddresses": [],
+      "jobTitle": "Principal Engineer",
+      "companyName": "Globex Cloud Services",
+      "department": "Platform Infrastructure",
+      "officeLocation": "Remote",
+      "profession": "Software Engineering",
+      "businessHomePage": null,
+      "assistantName": null,
+      "manager": null,
+      "spouseName": null,
+      "personalNotes": "Conference contact — KubeCon 2025. Owns home lab w/ Proxmox cluster.",
+      "children": [],
+      "homePhones": [],
+      "mobilePhone": "+1 555 010 7733",
+      "businessPhones": [],
+      "homeFaxNumber": null,
+      "businessFaxNumber": null,
+      "otherFaxNumber": null,
+      "emailAddresses": [
+        {
+          "name": "Daniel Park",
+          "address": "daniel.park@example.org",
+          "@odata.type": "#microsoft.graph.emailAddress"
+        }
+      ],
+      "homeAddress": {},
+      "businessAddress": {},
+      "otherAddress": {}
+    }
+  ]
+}

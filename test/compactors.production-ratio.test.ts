@@ -160,6 +160,65 @@ describe('PRODUCTION RATIO — mail tools (Phase 3: full-body real captures)', (
 });
 
 // ---------------------------------------------------------------------------
+// Contacts + /me/people — byte-ratio gates (Phase 3 Step 3, added 2026-05-15)
+//
+// FIXTURES: fabricated (PII-free) but shaped against real Graph response structure
+// including the full metadata bag (changeKey, parentFolderId, @odata.etag, yomi*,
+// fax numbers, imAddresses, profession, manager, etc. for contacts;
+// selectionLikelihood, userPrincipalName, imAddress, websites, etc. for people).
+//
+// MEASURED RATIOS (2026-05-15):
+//   - list-outlook-contacts: ratio ≈0.55 (raw 3,193 / compact 1,749, excluding _fixture_comment overhead)
+//                            ≈0.49 against full raw (which includes the comment field as bulk)
+//   - get-outlook-contact (single):  ratio ≈0.60 (sparse contact w/ many null fields)
+//   - list-relevant-people:  ratio ≈0.51
+//
+// NOTE ON THE "≥70%" PR DESCRIPTION CLAIM:
+//   The PR body originally cited a "~70% reduction" target. That target was an
+//   early heuristic estimate based on the field-count delta (we drop ~25 of ~40
+//   fields per contact). Real byte savings are lower than field-count savings
+//   would suggest because (a) the dropped fields are often `null` or short
+//   ([]/""/false), which costs ~10 bytes each, while (b) the preserved fields
+//   include the bulk-carriers (notes, addresses, full email arrays, ids).
+//
+//   Honest measured reduction is ~45–55% across the projectors. We gate at
+//   ≤0.62 (single get) and ≤0.58 (lists) — modest headroom above measured. The
+//   PR description has been corrected to reflect the measured ~45–55% range.
+// ---------------------------------------------------------------------------
+
+describe('PRODUCTION RATIO — contacts + people projectors (added 2026-05-15)', () => {
+  it('list-outlook-contacts — ratio ≤0.58', () => {
+    const raw = loadFixture('list-outlook-contacts.2026-05-15.fabricated.json');
+    const compact = COMPACTORS['list-outlook-contacts'](raw);
+    const ratio = byteSize(compact) / byteSize(raw);
+    // MEASURED: ~0.49 with the _fixture_comment field included in raw bulk
+    // (closer to ~0.55 if comment is stripped). Gate ≤0.58 holds for both shapes.
+    expect(ratio).toBeLessThanOrEqual(0.58);
+  });
+
+  it('get-outlook-contact — ratio ≤0.62 on a single sparse contact', () => {
+    const list = loadFixture('list-outlook-contacts.2026-05-15.fabricated.json') as {
+      value: Array<Record<string, unknown>>;
+    };
+    // Use the SECOND fixture entry — Daniel Park — sparser (many null fields, empty addresses).
+    // This is the harder case for byte reduction because the bulk-to-keep ratio is unfavorable.
+    const raw = list.value[1];
+    const compact = COMPACTORS['get-outlook-contact'](raw);
+    const ratio = byteSize(compact) / byteSize(raw);
+    // MEASURED: ~0.60 on the sparse contact. Denser contacts achieve closer to ~0.50.
+    expect(ratio).toBeLessThanOrEqual(0.62);
+  });
+
+  it('list-relevant-people — ratio ≤0.58', () => {
+    const raw = loadFixture('list-relevant-people.2026-05-15.fabricated.json');
+    const compact = COMPACTORS['list-relevant-people'](raw);
+    const ratio = byteSize(compact) / byteSize(raw);
+    // MEASURED: ~0.51. Gate ≤0.58 for fixture variance.
+    expect(ratio).toBeLessThanOrEqual(0.58);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Phase 3 Step 1 status (FRIDAY 2026-05-07)
 // ---------------------------------------------------------------------------
 //   ✓ 1. get-mail-message lululemon — REAL full-body capture landed; ratio ≤0.45 asserted
