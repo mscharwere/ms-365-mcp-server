@@ -17,10 +17,19 @@
  * transitions are handled from the tz database rather than a fixed offset table.
  */
 
-/** Tools whose startDateTime/endDateTime window is normalized. Deliberately explicit. */
+/**
+ * Tools whose startDateTime/endDateTime window is normalized. Deliberately explicit: every entry
+ * is a Graph endpoint whose required startDateTime/endDateTime query params are documented as
+ * "interpreted as UTC if no offset" and which accepts `Prefer: outlook.timezone` (so it exposes the
+ * `timezone` tool param via `supportsTimezone` in endpoints.json).
+ */
 export const CALENDAR_VIEW_OFFSET_TOOLS: ReadonlySet<string> = new Set([
-  'get-calendar-view',
-  'get-specific-calendar-view',
+  'get-calendar-view', // /me/calendarView
+  'get-specific-calendar-view', // /me/calendars/{id}/calendarView
+  'get-shared-calendar-view', // /users/{id}/calendarView
+  'get-group-calendar-view', // /groups/{id}/calendarView
+  'list-calendar-event-instances', // /me/calendars/{id}/events/{id}/instances
+  'list-calendar-view-delta', // /me/calendarView/delta()
 ]);
 
 export const CALENDAR_WINDOW_PARAMS = ['startDateTime', 'endDateTime'] as const;
