@@ -17,6 +17,11 @@ export interface DiscoverySearchIndex {
   nameTokens: Map<string, Set<string>>;
 }
 import { describeToolSchema, describeUtilityToolSchema } from './lib/tool-schema.js';
+import {
+  CALENDAR_VIEW_OFFSET_TOOLS,
+  CalendarDateTimeError,
+  normalizeCalendarWindowParams,
+} from './lib/calendar-datetime.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -271,6 +276,32 @@ async function executeGraphTool(
   authManager?: AuthManager
 ): Promise<CallToolResult> {
   logger.info(`Tool ${tool.alias} called with params: ${JSON.stringify(params)}`);
+
+  // Graph treats an offset-less calendarView startDateTime/endDateTime as UTC; the `timezone`
+  // param only affects how returned times are rendered. Inject the offset from `timezone`, or
+  // refuse the call, rather than silently querying a shifted window. See lib/calendar-datetime.ts.
+  if (CALENDAR_VIEW_OFFSET_TOOLS.has(config?.toolName ?? tool.alias)) {
+    try {
+      const normalized = normalizeCalendarWindowParams(params);
+      for (const name of ['startDateTime', 'endDateTime']) {
+        if (normalized[name] !== params[name]) {
+          logger.info(
+            `Normalized ${name} for ${tool.alias}: ${String(params[name])} -> ${String(normalized[name])}`
+          );
+        }
+      }
+      params = normalized;
+    } catch (err) {
+      if (err instanceof CalendarDateTimeError) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: err.message }) }],
+          isError: true,
+        };
+      }
+      throw err;
+    }
+  }
+
   try {
     // Resolve account-specific token if `account` parameter is provided (or auto-resolve for single account).
     // Skip in OAuth/HTTP mode — let the request context drive token selection via GraphClient.

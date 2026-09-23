@@ -154,10 +154,14 @@ describe('Calendar View Tools', () => {
         if (toolName === 'get-calendar-view') {
           expect(description).toContain('TIP:');
           expect(description).toContain('recurring event instances');
+          expect(description).toContain('WITH a UTC offset');
+          expect(description).toContain('-07:00');
         }
         if (toolName === 'get-specific-calendar-view') {
           expect(description).toContain('TIP:');
           expect(description).toContain('recurring event instances');
+          expect(description).toContain('WITH a UTC offset');
+          expect(description).toContain('-07:00');
         }
         if (toolName === 'list-calendar-event-instances') {
           expect(description).toContain('TIP:');
@@ -253,6 +257,88 @@ describe('Calendar View Tools', () => {
       const calledPath = (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
       expect(calledPath).toContain('$top=50');
+    });
+
+    describe('UTC offset normalization (bare datetime is otherwise read as UTC by Graph)', () => {
+      const calledPath = () =>
+        (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
+
+      it.each(['get-calendar-view', 'get-specific-calendar-view'])(
+        '%s: injects PDT offset from timezone on a DST-active date',
+        async (toolName) => {
+          const handler = getToolHandler(toolName);
+          await handler({
+            calendarId: 'cal-abc-123',
+            startDateTime: '2026-09-22T00:00:00',
+            endDateTime: '2026-09-22T23:59:59',
+            timezone: 'America/Los_Angeles',
+          });
+          expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-09-22T23%3A59%3A59-07%3A00');
+          // Display preference is still sent alongside the corrected window
+          expect(mockGraphClient.graphRequest).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.objectContaining({
+              headers: expect.objectContaining({
+                Prefer: expect.stringContaining('outlook.timezone="America/Los_Angeles"'),
+              }),
+            })
+          );
+        }
+      );
+
+      it('injects PST offset on a DST-inactive date', async () => {
+        const handler = getToolHandler('get-calendar-view');
+        await handler({
+          startDateTime: '2026-01-15T00:00:00',
+          endDateTime: '2026-01-16T00:00:00',
+          timezone: 'America/Los_Angeles',
+        });
+        expect(calledPath()).toContain('startDateTime=2026-01-15T00%3A00%3A00-08%3A00');
+        expect(calledPath()).toContain('endDateTime=2026-01-16T00%3A00%3A00-08%3A00');
+      });
+
+      it.each(['get-calendar-view', 'get-specific-calendar-view'])(
+        '%s: rejects a bare datetime with no timezone and never calls Graph',
+        async (toolName) => {
+          const handler = getToolHandler(toolName);
+          const result = (await handler({
+            calendarId: 'cal-abc-123',
+            startDateTime: '2026-09-22T00:00:00',
+            endDateTime: '2026-09-23T00:00:00Z',
+          })) as { isError?: boolean; content: { text: string }[] };
+          expect(result.isError).toBe(true);
+          expect(JSON.parse(result.content[0].text).error).toMatch(
+            /startDateTime\/endDateTime must include a UTC offset, or pass `timezone`/
+          );
+          expect(mockGraphClient.graphRequest).not.toHaveBeenCalled();
+        }
+      );
+
+      it('passes offset-qualified datetimes through unchanged even with timezone', async () => {
+        const handler = getToolHandler('get-specific-calendar-view');
+        await handler({
+          calendarId: 'cal-abc-123',
+          startDateTime: '2026-09-22T00:00:00-07:00',
+          endDateTime: '2026-09-23T07:00:00Z',
+          timezone: 'America/Los_Angeles',
+        });
+        expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
+        expect(calledPath()).toContain('endDateTime=2026-09-23T07%3A00%3A00Z');
+        expect(calledPath()).not.toContain('-07%3A00-07%3A00');
+      });
+
+      it('does not change behavior for tools outside the calendarView scope', async () => {
+        const handler = getToolHandler('list-calendar-event-instances');
+        await handler({
+          calendarId: 'cal-abc-123',
+          eventId: 'event-xyz-456',
+          startDateTime: '2026-09-22T00:00:00',
+          endDateTime: '2026-09-23T00:00:00',
+        });
+        expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00&');
+        expect(calledPath()).toMatch(/endDateTime=2026-09-23T00%3A00%3A00($|&)/);
+      });
     });
 
     it('should call graphRequest with correct path for event instances', async () => {
