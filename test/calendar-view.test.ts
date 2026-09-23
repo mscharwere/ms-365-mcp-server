@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { registerGraphTools } from '../src/graph-tools.js';
 import type { GraphClient } from '../src/graph-client.js';
@@ -316,6 +316,14 @@ describe('Calendar View Tools', () => {
       const calledPath = () =>
         (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
 
+      // Hermetic: these cases describe the no-default behavior, whatever the runner's env holds.
+      beforeEach(() => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', '');
+      });
+      afterEach(() => {
+        vi.unstubAllEnvs();
+      });
+
       it.each(WINDOW_TOOLS)(
         '%s: injects PDT offset from timezone on a DST-active date',
         async (toolName, pathParams) => {
@@ -394,6 +402,134 @@ describe('Calendar View Tools', () => {
           filter: "start/dateTime ge '2026-09-22T00:00:00'",
         })) as { isError?: boolean };
         expect(result.isError).toBeUndefined();
+        expect(calledPath()).toContain(
+          encodeURIComponent("start/dateTime ge '2026-09-22T00:00:00'")
+        );
+      });
+    });
+
+    describe('server default timezone fallback (MS365_MCP_DEFAULT_TIMEZONE)', () => {
+      const calledPath = () =>
+        (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
+      const calledOptions = () =>
+        (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock.calls[0][1] as {
+          headers?: Record<string, string>;
+        };
+
+      afterEach(() => {
+        vi.unstubAllEnvs();
+      });
+
+      it.each(WINDOW_TOOLS)(
+        '%s: default set, no offset, no timezone param -> PDT on a DST-active date',
+        async (toolName, pathParams) => {
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'America/Los_Angeles');
+          const handler = getToolHandler(toolName);
+          const result = (await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00',
+            endDateTime: '2026-09-22T23:59:59',
+          })) as { isError?: boolean };
+          expect(result.isError).toBeUndefined();
+          expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-09-22T23%3A59%3A59-07%3A00');
+          // The default fixes the window only; it does not add a display-timezone preference.
+          expect(calledOptions().headers?.Prefer ?? '').not.toContain('outlook.timezone');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: default set, no offset, no timezone param -> PST on a DST-inactive date',
+        async (toolName, pathParams) => {
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'America/Los_Angeles');
+          const handler = getToolHandler(toolName);
+          await handler({
+            ...pathParams,
+            startDateTime: '2026-01-15T00:00:00',
+            endDateTime: '2026-01-16',
+          });
+          expect(calledPath()).toContain('startDateTime=2026-01-15T00%3A00%3A00-08%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-01-16T00%3A00%3A00-08%3A00');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: explicit timezone param beats the default',
+        async (toolName, pathParams) => {
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'America/Los_Angeles');
+          const handler = getToolHandler(toolName);
+          await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00',
+            endDateTime: '2026-09-23T00:00:00',
+            timezone: 'Asia/Kolkata',
+          });
+          expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00%2B05%3A30');
+          expect(calledPath()).toContain('endDateTime=2026-09-23T00%3A00%3A00%2B05%3A30');
+          expect(calledPath()).not.toContain('-07%3A00');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: offset already present -> passthrough, default never consulted',
+        async (toolName, pathParams) => {
+          // An invalid default would error if it were consulted at all.
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'Not/AZone');
+          const handler = getToolHandler(toolName);
+          const result = (await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00-08:00',
+            endDateTime: '2026-09-23T07:00:00Z',
+          })) as { isError?: boolean };
+          expect(result.isError).toBeUndefined();
+          expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-08%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-09-23T07%3A00%3A00Z');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: REGRESSION GUARD - default unset/blank keeps the original hard error',
+        async (toolName, pathParams) => {
+          for (const unset of [undefined, '', '   ']) {
+            vi.clearAllMocks();
+            vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', unset);
+            const handler = getToolHandler(toolName);
+            const result = (await handler({
+              ...pathParams,
+              startDateTime: '2026-09-22T00:00:00',
+              endDateTime: '2026-09-23T00:00:00Z',
+            })) as { isError?: boolean; content: { text: string }[] };
+            expect(result.isError).toBe(true);
+            // Byte-for-byte the pre-default message.
+            expect(JSON.parse(result.content[0].text).error).toBe(
+              'startDateTime "2026-09-22T00:00:00" has no UTC offset. Microsoft Graph treats an ' +
+                'offset-less startDateTime/endDateTime as UTC, which silently shifts the query window. ' +
+                'startDateTime/endDateTime must include a UTC offset, or pass `timezone` so it can be ' +
+                'inferred (e.g. "2026-09-22T00:00:00-07:00", or timezone "America/Los_Angeles").'
+            );
+            expect(mockGraphClient.graphRequest).not.toHaveBeenCalled();
+          }
+        }
+      );
+
+      it('misconfigured default + bare datetime -> error naming the env var, Graph not called', async () => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'Not/AZone');
+        const handler = getToolHandler('get-calendar-view');
+        const result = (await handler({
+          startDateTime: '2026-09-22T00:00:00',
+          endDateTime: '2026-09-23T00:00:00',
+        })) as { isError?: boolean; content: { text: string }[] };
+        expect(result.isError).toBe(true);
+        expect(JSON.parse(result.content[0].text).error).toMatch(
+          /MS365_MCP_DEFAULT_TIMEZONE is set to "Not\/AZone"/
+        );
+        expect(mockGraphClient.graphRequest).not.toHaveBeenCalled();
+      });
+
+      it('does not touch tools outside the window-param scope even with a default', async () => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'America/Los_Angeles');
+        const handler = getToolHandler('list-calendar-events');
+        await handler({ filter: "start/dateTime ge '2026-09-22T00:00:00'" });
         expect(calledPath()).toContain(
           encodeURIComponent("start/dateTime ge '2026-09-22T00:00:00'")
         );
