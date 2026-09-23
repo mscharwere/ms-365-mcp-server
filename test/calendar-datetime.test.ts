@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   CALENDAR_VIEW_OFFSET_TOOLS,
   CalendarDateTimeError,
@@ -6,6 +6,7 @@ import {
   normalizeCalendarDateTime,
   normalizeCalendarWindowParams,
 } from '../src/lib/calendar-datetime.js';
+import { DEFAULT_TIMEZONE_ENV, getDefaultTimeZone } from '../src/lib/default-timezone.js';
 
 const LA = 'America/Los_Angeles';
 
@@ -189,5 +190,107 @@ describe('normalizeCalendarWindowParams', () => {
       expect(ep, name).toBeDefined();
       expect(ep!.supportsTimezone, name).toBe(true);
     }
+  });
+});
+
+describe('normalizeCalendarWindowParams — server default timezone fallback', () => {
+  it('uses the default for a bare value when no timezone param is passed (DST-active date)', () => {
+    const out = normalizeCalendarWindowParams(
+      { startDateTime: '2026-09-22T00:00:00', endDateTime: '2026-09-22T23:59:59' },
+      LA
+    );
+    expect(out.startDateTime).toBe('2026-09-22T00:00:00-07:00');
+    expect(out.endDateTime).toBe('2026-09-22T23:59:59-07:00');
+  });
+
+  it('uses the default DST-aware, not as a fixed offset (DST-inactive date)', () => {
+    const out = normalizeCalendarWindowParams(
+      { startDateTime: '2026-01-15T00:00:00', endDateTime: '2026-01-16' },
+      LA
+    );
+    expect(out.startDateTime).toBe('2026-01-15T00:00:00-08:00');
+    expect(out.endDateTime).toBe('2026-01-16T00:00:00-08:00');
+  });
+
+  it('does not inject a timezone param (display preference stays caller-driven)', () => {
+    const out = normalizeCalendarWindowParams(
+      { startDateTime: '2026-09-22T00:00:00', endDateTime: '2026-09-23T00:00:00' },
+      LA
+    );
+    expect(out).not.toHaveProperty('timezone');
+  });
+
+  it('an explicit timezone param beats the default', () => {
+    const out = normalizeCalendarWindowParams(
+      {
+        startDateTime: '2026-09-22T00:00:00',
+        endDateTime: '2026-09-23T00:00:00',
+        timezone: 'Asia/Kolkata',
+      },
+      LA
+    );
+    expect(out.startDateTime).toBe('2026-09-22T00:00:00+05:30');
+    expect(out.endDateTime).toBe('2026-09-23T00:00:00+05:30');
+  });
+
+  it('offset-qualified values pass through; the default is never consulted', () => {
+    const input = {
+      startDateTime: '2026-09-22T00:00:00-08:00',
+      endDateTime: '2026-09-23T07:00:00Z',
+    };
+    // A default that is not even a valid zone proves it was never looked at.
+    expect(normalizeCalendarWindowParams(input, 'Not/AZone')).toEqual(input);
+    expect(normalizeCalendarWindowParams(input, LA)).toEqual(input);
+  });
+
+  it('a blank default is treated as no default (bare value still rejected)', () => {
+    for (const blank of [undefined, '', '   ']) {
+      expect(() =>
+        normalizeCalendarWindowParams(
+          { startDateTime: '2026-09-22T00:00:00', endDateTime: '2026-09-23T00:00:00Z' },
+          blank
+        )
+      ).toThrow(/must include a UTC offset, or pass `timezone`/);
+    }
+  });
+
+  it('a misconfigured default fails loud, naming the env var, when it would be used', () => {
+    const call = () =>
+      normalizeCalendarWindowParams(
+        { startDateTime: '2026-09-22T00:00:00', endDateTime: '2026-09-23T00:00:00Z' },
+        'Not/AZone'
+      );
+    expect(call).toThrow(CalendarDateTimeError);
+    expect(call).toThrow(/MS365_MCP_DEFAULT_TIMEZONE is set to "Not\/AZone"/);
+  });
+
+  it('a misconfigured default is irrelevant when an explicit timezone param is passed', () => {
+    const out = normalizeCalendarWindowParams(
+      { startDateTime: '2026-09-22T00:00:00', endDateTime: '2026-09-23T00:00:00', timezone: LA },
+      'Not/AZone'
+    );
+    expect(out.startDateTime).toBe('2026-09-22T00:00:00-07:00');
+  });
+});
+
+describe('getDefaultTimeZone', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('reads MS365_MCP_DEFAULT_TIMEZONE, trimmed', () => {
+    expect(DEFAULT_TIMEZONE_ENV).toBe('MS365_MCP_DEFAULT_TIMEZONE');
+    vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', '  Europe/Berlin  ');
+    expect(getDefaultTimeZone()).toBe('Europe/Berlin');
+  });
+
+  it('has no built-in fallback: unset or blank → undefined', () => {
+    vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', '');
+    expect(getDefaultTimeZone()).toBeUndefined();
+    vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', '   ');
+    expect(getDefaultTimeZone()).toBeUndefined();
+    vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', undefined);
+    expect(process.env.MS365_MCP_DEFAULT_TIMEZONE).toBeUndefined();
+    expect(getDefaultTimeZone()).toBeUndefined();
   });
 });

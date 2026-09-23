@@ -505,6 +505,7 @@ Environment variables:
 - `MS365_MCP_MAX_TOP=<n>`: Hard cap for Graph `$top` / `top` on list requests (positive integer). When the model passes a larger value, the server clamps it to `n` so responses stay smaller. Example: `MS365_MCP_MAX_TOP=15`
 - `MS365_MCP_BODY_FORMAT=html`: Return email bodies as HTML instead of plain text (default: text)
 - `MS365_MCP_CLOUD_TYPE=global|china`: Microsoft cloud environment (alternative to --cloud flag)
+- `MS365_MCP_DEFAULT_TIMEZONE=<IANA zone>`: Optional default timezone (e.g. `Europe/Berlin`) for offset-less datetimes. Microsoft Graph reads a datetime with no UTC offset as UTC, so by default the calendar-view tools reject a bare `startDateTime`/`endDateTime` unless a `timezone` param is passed, and the mail list tools reject an offset-less `$filter` date literal. When this is set, those values are instead interpreted in this zone (DST-aware). Resolution order: explicit offset in the value → explicit `timezone` param → this default → error. Unset (the default) keeps the reject behavior.
 - `LOG_LEVEL`: Set logging level (default: 'info')
 - `SILENT=true|1`: Disable console output
 - `MS365_MCP_CLIENT_ID`: Custom Azure app client ID (defaults to built-in app)

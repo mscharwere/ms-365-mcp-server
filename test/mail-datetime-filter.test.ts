@@ -1,10 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import {
   MAIL_DATETIME_FILTER_TOOLS,
   MailFilterDateTimeError,
   assertMailFilterDateTimesHaveOffset,
   getFilterParam,
+  normalizeMailFilterDateTimes,
+  normalizeMailFilterParams,
 } from '../src/lib/mail-datetime-filter.js';
 import { registerGraphTools } from '../src/graph-tools.js';
 import type { GraphClient } from '../src/graph-client.js';
@@ -164,12 +166,91 @@ describe('MAIL_DATETIME_FILTER_TOOLS', () => {
   });
 });
 
+const LA = 'America/Los_Angeles';
+
+describe('normalizeMailFilterDateTimes — server default timezone fallback', () => {
+  it('resolves an offset-less datetime in the default zone (DST-active date)', () => {
+    expect(normalizeMailFilterDateTimes('receivedDateTime ge 2026-09-22T00:00:00', LA)).toBe(
+      'receivedDateTime ge 2026-09-22T00:00:00-07:00'
+    );
+  });
+
+  it('is DST-aware, not a fixed offset (DST-inactive date)', () => {
+    expect(normalizeMailFilterDateTimes('receivedDateTime ge 2026-01-15T00:00:00', LA)).toBe(
+      'receivedDateTime ge 2026-01-15T00:00:00-08:00'
+    );
+  });
+
+  it('expands a date-only literal to local midnight with offset', () => {
+    expect(normalizeMailFilterDateTimes('receivedDateTime ge 2026-09-22', LA)).toBe(
+      'receivedDateTime ge 2026-09-22T00:00:00-07:00'
+    );
+  });
+
+  it('rewrites every offending literal in place and leaves the rest of the filter alone', () => {
+    expect(
+      normalizeMailFilterDateTimes(
+        "isRead eq false and (receivedDateTime ge '2026-09-22' and sentDateTime lt 2026-09-23T07:00:00Z) and receivedDateTime lt 2026-12-01T18:30",
+        LA
+      )
+    ).toBe(
+      "isRead eq false and (receivedDateTime ge '2026-09-22T00:00:00-07:00' and sentDateTime lt 2026-09-23T07:00:00Z) and receivedDateTime lt 2026-12-01T18:30-08:00"
+    );
+  });
+
+  it('preserves the URL-style + separator form', () => {
+    expect(normalizeMailFilterDateTimes('receivedDateTime+ge+2026-09-22', LA)).toBe(
+      'receivedDateTime+ge+2026-09-22T00:00:00-07:00'
+    );
+  });
+
+  it('offset-qualified filters are returned unchanged; the default is never consulted', () => {
+    const f =
+      'receivedDateTime ge 2026-09-22T00:00:00-08:00 and receivedDateTime lt 2026-09-23T07:00:00Z';
+    expect(normalizeMailFilterDateTimes(f, 'Not/AZone')).toBe(f);
+    expect(normalizeMailFilterDateTimes('isRead eq false', 'Not/AZone')).toBe('isRead eq false');
+  });
+
+  it('a blank default is treated as no default (offset-less literal still rejected)', () => {
+    for (const blank of [undefined, '', '   ']) {
+      expect(() => normalizeMailFilterDateTimes('receivedDateTime ge 2026-09-22', blank)).toThrow(
+        MailFilterDateTimeError
+      );
+    }
+  });
+
+  it('a misconfigured default fails loud, naming the env var, when it would be used', () => {
+    const call = () => normalizeMailFilterDateTimes('receivedDateTime ge 2026-09-22', 'Not/AZone');
+    expect(call).toThrow(MailFilterDateTimeError);
+    expect(call).toThrow(/MS365_MCP_DEFAULT_TIMEZONE is set to "Not\/AZone"/);
+  });
+
+  it('normalizeMailFilterParams rewrites whichever key was used and does not mutate input', () => {
+    const input = { $filter: 'receivedDateTime ge 2026-09-22', top: 5 };
+    const snapshot = { ...input };
+    expect(normalizeMailFilterParams(input, LA)).toEqual({
+      $filter: 'receivedDateTime ge 2026-09-22T00:00:00-07:00',
+      top: 5,
+    });
+    expect(input).toEqual(snapshot);
+    expect(normalizeMailFilterParams({ filter: 'receivedDateTime ge 2026-09-22' }, LA)).toEqual({
+      filter: 'receivedDateTime ge 2026-09-22T00:00:00-07:00',
+    });
+  });
+});
+
 describe('mail tool execution with a date $filter', () => {
   let mockServer: { tool: ReturnType<typeof vi.fn> };
   let mockGraphClient: GraphClient;
 
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    // Hermetic: the pre-existing cases describe the no-default behavior. Default-on cases stub it.
+    vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', '');
     mockServer = { tool: vi.fn() };
     mockGraphClient = {
       graphRequest: vi.fn().mockResolvedValue({
@@ -233,6 +314,97 @@ describe('mail tool execution with a date $filter', () => {
     const handler = getToolHandler('list-mail-messages');
     await handler({ filter: 'isRead eq false' });
     expect(calledPath()).toContain(`$filter=${encodeURIComponent('isRead eq false')}`);
+  });
+
+  describe('server default timezone fallback (MS365_MCP_DEFAULT_TIMEZONE)', () => {
+    it.each(MAIL_TOOLS)(
+      '%s: default set -> offset-less literal resolved in the default zone (DST-active)',
+      async (toolName, pathParams) => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', LA);
+        const handler = getToolHandler(toolName);
+        const result = (await handler({
+          ...pathParams,
+          filter: 'receivedDateTime ge 2026-09-22',
+        })) as { isError?: boolean };
+        expect(result.isError).toBeUndefined();
+        expect(calledPath()).toContain(
+          `$filter=${encodeURIComponent('receivedDateTime ge 2026-09-22T00:00:00-07:00')}`
+        );
+      }
+    );
+
+    it.each(MAIL_TOOLS)(
+      '%s: default set -> DST-inactive date gets the standard-time offset',
+      async (toolName, pathParams) => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', LA);
+        const handler = getToolHandler(toolName);
+        await handler({ ...pathParams, filter: 'receivedDateTime ge 2026-01-15T00:00:00' });
+        expect(calledPath()).toContain(
+          `$filter=${encodeURIComponent('receivedDateTime ge 2026-01-15T00:00:00-08:00')}`
+        );
+      }
+    );
+
+    it.each(MAIL_TOOLS)(
+      '%s: offset already present -> passthrough, default never consulted',
+      async (toolName, pathParams) => {
+        vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'Not/AZone');
+        const handler = getToolHandler(toolName);
+        const filter =
+          'receivedDateTime ge 2026-09-22T00:00:00-08:00 and receivedDateTime lt 2026-09-23T00:00:00+05:30';
+        const result = (await handler({ ...pathParams, filter })) as { isError?: boolean };
+        expect(result.isError).toBeUndefined();
+        expect(calledPath()).toContain(`$filter=${encodeURIComponent(filter)}`);
+      }
+    );
+
+    it.each(MAIL_TOOLS)(
+      '%s: REGRESSION GUARD - default unset/blank keeps the original hard error',
+      async (toolName, pathParams) => {
+        for (const unset of [undefined, '', '   ']) {
+          vi.clearAllMocks();
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', unset);
+          const handler = getToolHandler(toolName);
+          const result = (await handler({
+            ...pathParams,
+            filter: 'receivedDateTime ge 2026-09-22',
+          })) as { isError?: boolean; content: { text: string }[] };
+          expect(result.isError).toBe(true);
+          // Byte-for-byte the pre-default message.
+          expect(JSON.parse(result.content[0].text).error).toBe(
+            '$filter compares receivedDateTime to "2026-09-22", which has no UTC offset. Graph ' +
+              'stores and compares receivedDateTime in UTC, and mail tools have no timezone ' +
+              'parameter, so an offset-less value silently shifts the window by your UTC offset. ' +
+              'Include an explicit offset, e.g. "receivedDateTime ge 2026-09-22T00:00:00-07:00" ' +
+              '(Pacific daylight time) or "receivedDateTime ge 2026-09-22T00:00:00Z" (UTC).'
+          );
+          expect(mockGraphClient.graphRequest).not.toHaveBeenCalled();
+        }
+      }
+    );
+
+    it('misconfigured default + offset-less literal -> error naming the env var, Graph not called', async () => {
+      vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'Not/AZone');
+      const handler = getToolHandler('list-mail-messages');
+      const result = (await handler({ filter: 'receivedDateTime ge 2026-09-22' })) as {
+        isError?: boolean;
+        content: { text: string }[];
+      };
+      expect(result.isError).toBe(true);
+      expect(JSON.parse(result.content[0].text).error).toMatch(
+        /MS365_MCP_DEFAULT_TIMEZONE is set to "Not\/AZone"/
+      );
+      expect(mockGraphClient.graphRequest).not.toHaveBeenCalled();
+    });
+
+    it('does not rewrite non-mail tools even with a default', async () => {
+      vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', LA);
+      const handler = getToolHandler('list-chat-messages');
+      await handler({ chatId: 'chat-1', filter: 'lastModifiedDateTime gt 2026-09-22T00:00:00' });
+      expect(calledPath()).toContain(
+        `$filter=${encodeURIComponent('lastModifiedDateTime gt 2026-09-22T00:00:00')}`
+      );
+    });
   });
 
   it('does not guard non-mail tools', async () => {

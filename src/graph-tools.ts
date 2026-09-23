@@ -25,9 +25,9 @@ import {
 import {
   MAIL_DATETIME_FILTER_TOOLS,
   MailFilterDateTimeError,
-  assertMailFilterDateTimesHaveOffset,
-  getFilterParam,
+  normalizeMailFilterParams,
 } from './lib/mail-datetime-filter.js';
+import { getDefaultTimeZone } from './lib/default-timezone.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -284,11 +284,12 @@ async function executeGraphTool(
   logger.info(`Tool ${tool.alias} called with params: ${JSON.stringify(params)}`);
 
   // Graph treats an offset-less calendarView startDateTime/endDateTime as UTC; the `timezone`
-  // param only affects how returned times are rendered. Inject the offset from `timezone`, or
-  // refuse the call, rather than silently querying a shifted window. See lib/calendar-datetime.ts.
+  // param only affects how returned times are rendered. Inject the offset from `timezone` (or, if
+  // absent, the MS365_MCP_DEFAULT_TIMEZONE server default), or refuse the call, rather than silently
+  // querying a shifted window. See lib/calendar-datetime.ts.
   if (CALENDAR_VIEW_OFFSET_TOOLS.has(config?.toolName ?? tool.alias)) {
     try {
-      const normalized = normalizeCalendarWindowParams(params);
+      const normalized = normalizeCalendarWindowParams(params, getDefaultTimeZone());
       for (const name of ['startDateTime', 'endDateTime']) {
         if (normalized[name] !== params[name]) {
           logger.info(
@@ -309,21 +310,27 @@ async function executeGraphTool(
   }
 
   // Mail $filter date comparisons are evaluated in UTC and mail tools have no timezone param, so an
-  // offset-less literal can't be auto-corrected: refuse it. See lib/mail-datetime-filter.ts.
+  // offset-less literal is resolved in the MS365_MCP_DEFAULT_TIMEZONE server default if configured,
+  // and refused otherwise. See lib/mail-datetime-filter.ts.
   if (MAIL_DATETIME_FILTER_TOOLS.has(config?.toolName ?? tool.alias)) {
-    const filter = getFilterParam(params);
-    if (filter !== undefined) {
-      try {
-        assertMailFilterDateTimesHaveOffset(filter);
-      } catch (err) {
-        if (err instanceof MailFilterDateTimeError) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ error: err.message }) }],
-            isError: true,
-          };
+    try {
+      const normalized = normalizeMailFilterParams(params, getDefaultTimeZone());
+      for (const name of ['filter', '$filter']) {
+        if (normalized[name] !== params[name]) {
+          logger.info(
+            `Normalized ${name} for ${tool.alias}: ${String(params[name])} -> ${String(normalized[name])}`
+          );
         }
-        throw err;
       }
+      params = normalized;
+    } catch (err) {
+      if (err instanceof MailFilterDateTimeError) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: err.message }) }],
+          isError: true,
+        };
+      }
+      throw err;
     }
   }
 

@@ -8,14 +8,20 @@
  * intending local time therefore silently gets a window shifted by the zone's offset, and
  * evening events drop out of the result with no error.
  *
- * This module closes that gap for the calendarView tools:
- *   - bare datetime + `timezone`    → inject that zone's real (DST-aware) offset for that date
- *   - bare datetime + no `timezone` → validation error (never send an ambiguous window)
- *   - datetime already carrying `Z` or `±HH:MM` → passed through byte-for-byte unchanged
+ * This module closes that gap for the calendarView tools. Resolution order for each value:
+ *   1. datetime already carrying `Z` or `±HH:MM` → passed through byte-for-byte unchanged
+ *   2. bare datetime + `timezone` param → inject that zone's real (DST-aware) offset for that date
+ *   3. bare datetime + no `timezone`, server default configured (MS365_MCP_DEFAULT_TIMEZONE, see
+ *      default-timezone.ts) → same as 2, using the default zone
+ *   4. bare datetime + neither → validation error (never send an ambiguous window)
+ * The default only fixes the query window; it does not set the `Prefer: outlook.timezone` display
+ * header (that stays driven by the explicit `timezone` param alone).
  *
  * Offsets are computed with the built-in `Intl` API (full ICU ships with Node 18+), so DST
  * transitions are handled from the tz database rather than a fixed offset table.
  */
+
+import { invalidDefaultTimeZoneMessage } from './default-timezone.js';
 
 /**
  * Tools whose startDateTime/endDateTime window is normalized. Deliberately explicit: every entry
@@ -77,11 +83,19 @@ export function hasUtcOffset(value: string): boolean {
   return parsed !== null && parsed.hasOffset;
 }
 
-/** Throws CalendarDateTimeError if `timeZone` is not a zone name the runtime's ICU knows. */
-function assertValidTimeZone(timeZone: string): void {
+/** True when `timeZone` is a zone name the runtime's ICU knows. */
+export function isValidTimeZone(timeZone: string): boolean {
   try {
     new Intl.DateTimeFormat('en-US', { timeZone });
+    return true;
   } catch {
+    return false;
+  }
+}
+
+/** Throws CalendarDateTimeError if `timeZone` is not a zone name the runtime's ICU knows. */
+function assertValidTimeZone(timeZone: string): void {
+  if (!isValidTimeZone(timeZone)) {
     throw new CalendarDateTimeError(
       `Unrecognized timezone "${timeZone}". Pass an IANA timezone name (e.g. "America/Los_Angeles") ` +
         'so the offset can be inferred, or include an explicit UTC offset in startDateTime/endDateTime ' +
@@ -177,18 +191,32 @@ export function normalizeCalendarDateTime(
 /**
  * Return a copy of `params` with startDateTime/endDateTime normalized. Only string values are
  * touched; `params` itself is not mutated. Throws CalendarDateTimeError on an unfixable window.
+ *
+ * `defaultTimeZone` is the server-level fallback (the caller reads MS365_MCP_DEFAULT_TIMEZONE); it is
+ * used only when a value is offset-less AND no non-blank `timezone` param was passed. An explicit
+ * `timezone` param always wins. Omitted/undefined means no default (bare values are rejected).
  */
 export function normalizeCalendarWindowParams(
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
+  defaultTimeZone?: string
 ): Record<string, unknown> {
-  const timeZone =
+  const explicitTimeZone =
     typeof params.timezone === 'string' && params.timezone.trim() !== ''
       ? params.timezone.trim()
       : undefined;
+  const fallbackTimeZone = defaultTimeZone?.trim() || undefined;
+  const timeZone = explicitTimeZone ?? fallbackTimeZone;
+  const usingDefault = explicitTimeZone === undefined && fallbackTimeZone !== undefined;
   const out: Record<string, unknown> = { ...params };
   for (const name of CALENDAR_WINDOW_PARAMS) {
     const v = params[name];
     if (typeof v === 'string' && v !== '') {
+      // A misconfigured default is only an error when it would actually be consulted.
+      const parsed = parseIso(v.trim());
+      const needsZone = parsed !== null && !parsed.hasOffset;
+      if (needsZone && usingDefault && !isValidTimeZone(fallbackTimeZone!)) {
+        throw new CalendarDateTimeError(invalidDefaultTimeZoneMessage(fallbackTimeZone!));
+      }
       out[name] = normalizeCalendarDateTime(name, v, timeZone);
     }
   }
