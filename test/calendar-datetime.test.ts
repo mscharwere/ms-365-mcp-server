@@ -170,10 +170,24 @@ describe('normalizeCalendarWindowParams', () => {
     ).toThrow(CalendarDateTimeError);
   });
 
-  it('is scoped to exactly the two calendarView tools', () => {
+  it('is scoped to exactly the six startDateTime/endDateTime window tools', () => {
     expect([...CALENDAR_VIEW_OFFSET_TOOLS].sort()).toEqual([
       'get-calendar-view',
+      'get-group-calendar-view',
+      'get-shared-calendar-view',
       'get-specific-calendar-view',
+      'list-calendar-event-instances',
+      'list-calendar-view-delta',
     ]);
+  });
+
+  it('every scoped tool exposes a timezone param (supportsTimezone) in endpoints.json', async () => {
+    const endpoints = (await import('../src/endpoints.json', { with: { type: 'json' } }))
+      .default as Array<{ toolName: string; supportsTimezone?: boolean }>;
+    for (const name of CALENDAR_VIEW_OFFSET_TOOLS) {
+      const ep = endpoints.find((e) => e.toolName === name);
+      expect(ep, name).toBeDefined();
+      expect(ep!.supportsTimezone, name).toBe(true);
+    }
   });
 });

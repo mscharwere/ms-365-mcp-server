@@ -59,9 +59,59 @@ vi.mock('../src/generated/client.js', () => ({
           { name: 'endDateTime', type: 'Query', schema: z.string() },
         ],
       },
+      {
+        alias: 'get-shared-calendar-view',
+        method: 'get',
+        path: '/users/:userId/calendarView',
+        description: "The calendar view for another user's calendar.",
+        parameters: [
+          { name: 'userId', type: 'Path', schema: z.string() },
+          { name: 'startDateTime', type: 'Query', schema: z.string() },
+          { name: 'endDateTime', type: 'Query', schema: z.string() },
+        ],
+      },
+      {
+        alias: 'get-group-calendar-view',
+        method: 'get',
+        path: '/groups/:groupId/calendarView',
+        description: "The calendar view for a group's calendar.",
+        parameters: [
+          { name: 'groupId', type: 'Path', schema: z.string() },
+          { name: 'startDateTime', type: 'Query', schema: z.string() },
+          { name: 'endDateTime', type: 'Query', schema: z.string() },
+        ],
+      },
+      {
+        alias: 'list-calendar-view-delta',
+        method: 'get',
+        path: '/me/calendarView/delta()',
+        description: 'Delta of a calendar view.',
+        parameters: [
+          { name: 'startDateTime', type: 'Query', schema: z.string() },
+          { name: 'endDateTime', type: 'Query', schema: z.string() },
+        ],
+      },
+      {
+        alias: 'list-calendar-events',
+        method: 'get',
+        path: '/me/events',
+        description: 'List events (no window params; not normalized).',
+        parameters: [{ name: 'filter', type: 'Query', schema: z.string().optional() }],
+      },
     ],
   },
 }));
+
+// Every tool whose startDateTime/endDateTime window is offset-normalized, with the path
+// params each one needs so a single parametrized test can drive all of them.
+const WINDOW_TOOLS: Array<[string, Record<string, string>]> = [
+  ['get-calendar-view', {}],
+  ['get-specific-calendar-view', { calendarId: 'cal-abc-123' }],
+  ['get-shared-calendar-view', { userId: 'someone@example.com' }],
+  ['get-group-calendar-view', { groupId: 'group-123' }],
+  ['list-calendar-event-instances', { calendarId: 'cal-abc-123', eventId: 'event-xyz-456' }],
+  ['list-calendar-view-delta', {}],
+];
 
 describe('Calendar View Tools', () => {
   let mockServer: { tool: ReturnType<typeof vi.fn> };
@@ -78,7 +128,8 @@ describe('Calendar View Tools', () => {
   });
 
   function getToolHandler(toolName: string) {
-    registerGraphTools(mockServer, mockGraphClient, false);
+    // orgMode=true so work-scope tools (get-shared-calendar-view, get-group-calendar-view) register
+    registerGraphTools(mockServer, mockGraphClient, false, undefined, true);
     const call = mockServer.tool.mock.calls.find((c: unknown[]) => c[0] === toolName);
     expect(call).toBeDefined();
     return call![call!.length - 1] as (params: Record<string, unknown>) => Promise<unknown>;
@@ -101,13 +152,7 @@ describe('Calendar View Tools', () => {
         const toolName = call[0] as string;
         const paramSchema = call[2] as Record<string, z.ZodTypeAny>;
 
-        if (
-          [
-            'get-calendar-view',
-            'get-specific-calendar-view',
-            'list-calendar-event-instances',
-          ].includes(toolName)
-        ) {
+        if (WINDOW_TOOLS.map(([name]) => name).includes(toolName)) {
           expect(paramSchema).toHaveProperty('timezone');
         }
       }
@@ -163,9 +208,17 @@ describe('Calendar View Tools', () => {
           expect(description).toContain('WITH a UTC offset');
           expect(description).toContain('-07:00');
         }
-        if (toolName === 'list-calendar-event-instances') {
+        if (
+          [
+            'list-calendar-event-instances',
+            'get-shared-calendar-view',
+            'get-group-calendar-view',
+            'list-calendar-view-delta',
+          ].includes(toolName)
+        ) {
           expect(description).toContain('TIP:');
-          expect(description).toContain('startDateTime and endDateTime');
+          expect(description).toContain('WITH a UTC offset');
+          expect(description).toContain('-07:00');
         }
       }
     });
@@ -263,12 +316,12 @@ describe('Calendar View Tools', () => {
       const calledPath = () =>
         (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock.calls[0][0] as string;
 
-      it.each(['get-calendar-view', 'get-specific-calendar-view'])(
+      it.each(WINDOW_TOOLS)(
         '%s: injects PDT offset from timezone on a DST-active date',
-        async (toolName) => {
+        async (toolName, pathParams) => {
           const handler = getToolHandler(toolName);
           await handler({
-            calendarId: 'cal-abc-123',
+            ...pathParams,
             startDateTime: '2026-09-22T00:00:00',
             endDateTime: '2026-09-22T23:59:59',
             timezone: 'America/Los_Angeles',
@@ -287,23 +340,27 @@ describe('Calendar View Tools', () => {
         }
       );
 
-      it('injects PST offset on a DST-inactive date', async () => {
-        const handler = getToolHandler('get-calendar-view');
-        await handler({
-          startDateTime: '2026-01-15T00:00:00',
-          endDateTime: '2026-01-16T00:00:00',
-          timezone: 'America/Los_Angeles',
-        });
-        expect(calledPath()).toContain('startDateTime=2026-01-15T00%3A00%3A00-08%3A00');
-        expect(calledPath()).toContain('endDateTime=2026-01-16T00%3A00%3A00-08%3A00');
-      });
+      it.each(WINDOW_TOOLS)(
+        '%s: injects PST offset on a DST-inactive date',
+        async (toolName, pathParams) => {
+          const handler = getToolHandler(toolName);
+          await handler({
+            ...pathParams,
+            startDateTime: '2026-01-15T00:00:00',
+            endDateTime: '2026-01-16T00:00:00',
+            timezone: 'America/Los_Angeles',
+          });
+          expect(calledPath()).toContain('startDateTime=2026-01-15T00%3A00%3A00-08%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-01-16T00%3A00%3A00-08%3A00');
+        }
+      );
 
-      it.each(['get-calendar-view', 'get-specific-calendar-view'])(
+      it.each(WINDOW_TOOLS)(
         '%s: rejects a bare datetime with no timezone and never calls Graph',
-        async (toolName) => {
+        async (toolName, pathParams) => {
           const handler = getToolHandler(toolName);
           const result = (await handler({
-            calendarId: 'cal-abc-123',
+            ...pathParams,
             startDateTime: '2026-09-22T00:00:00',
             endDateTime: '2026-09-23T00:00:00Z',
           })) as { isError?: boolean; content: { text: string }[] };
@@ -315,29 +372,31 @@ describe('Calendar View Tools', () => {
         }
       );
 
-      it('passes offset-qualified datetimes through unchanged even with timezone', async () => {
-        const handler = getToolHandler('get-specific-calendar-view');
-        await handler({
-          calendarId: 'cal-abc-123',
-          startDateTime: '2026-09-22T00:00:00-07:00',
-          endDateTime: '2026-09-23T07:00:00Z',
-          timezone: 'America/Los_Angeles',
-        });
-        expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
-        expect(calledPath()).toContain('endDateTime=2026-09-23T07%3A00%3A00Z');
-        expect(calledPath()).not.toContain('-07%3A00-07%3A00');
-      });
+      it.each(WINDOW_TOOLS)(
+        '%s: passes offset-qualified datetimes through unchanged even with timezone',
+        async (toolName, pathParams) => {
+          const handler = getToolHandler(toolName);
+          await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00-07:00',
+            endDateTime: '2026-09-23T07:00:00Z',
+            timezone: 'America/Los_Angeles',
+          });
+          expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
+          expect(calledPath()).toContain('endDateTime=2026-09-23T07%3A00%3A00Z');
+          expect(calledPath()).not.toContain('-07%3A00-07%3A00');
+        }
+      );
 
-      it('does not change behavior for tools outside the calendarView scope', async () => {
-        const handler = getToolHandler('list-calendar-event-instances');
-        await handler({
-          calendarId: 'cal-abc-123',
-          eventId: 'event-xyz-456',
-          startDateTime: '2026-09-22T00:00:00',
-          endDateTime: '2026-09-23T00:00:00',
-        });
-        expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00&');
-        expect(calledPath()).toMatch(/endDateTime=2026-09-23T00%3A00%3A00($|&)/);
+      it('does not touch tools outside the window-param scope', async () => {
+        const handler = getToolHandler('list-calendar-events');
+        const result = (await handler({
+          filter: "start/dateTime ge '2026-09-22T00:00:00'",
+        })) as { isError?: boolean };
+        expect(result.isError).toBeUndefined();
+        expect(calledPath()).toContain(
+          encodeURIComponent("start/dateTime ge '2026-09-22T00:00:00'")
+        );
       });
     });
 
