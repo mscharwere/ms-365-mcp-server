@@ -22,6 +22,12 @@ import {
   CalendarDateTimeError,
   normalizeCalendarWindowParams,
 } from './lib/calendar-datetime.js';
+import {
+  MAIL_DATETIME_FILTER_TOOLS,
+  MailFilterDateTimeError,
+  assertMailFilterDateTimesHaveOffset,
+  getFilterParam,
+} from './lib/mail-datetime-filter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -299,6 +305,25 @@ async function executeGraphTool(
         };
       }
       throw err;
+    }
+  }
+
+  // Mail $filter date comparisons are evaluated in UTC and mail tools have no timezone param, so an
+  // offset-less literal can't be auto-corrected: refuse it. See lib/mail-datetime-filter.ts.
+  if (MAIL_DATETIME_FILTER_TOOLS.has(config?.toolName ?? tool.alias)) {
+    const filter = getFilterParam(params);
+    if (filter !== undefined) {
+      try {
+        assertMailFilterDateTimesHaveOffset(filter);
+      } catch (err) {
+        if (err instanceof MailFilterDateTimeError) {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: err.message }) }],
+            isError: true,
+          };
+        }
+        throw err;
+      }
     }
   }
 
