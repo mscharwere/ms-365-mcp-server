@@ -433,8 +433,11 @@ describe('Calendar View Tools', () => {
           expect(result.isError).toBeUndefined();
           expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00-07%3A00');
           expect(calledPath()).toContain('endDateTime=2026-09-22T23%3A59%3A59-07%3A00');
-          // The default fixes the window only; it does not add a display-timezone preference.
-          expect(calledOptions().headers?.Prefer ?? '').not.toContain('outlook.timezone');
+          // The default now also drives the display-timezone preference (fix/response-timezone-local):
+          // previously it fixed the query window only and results still came back in UTC.
+          expect(calledOptions().headers?.Prefer ?? '').toContain(
+            'outlook.timezone="America/Los_Angeles"'
+          );
         }
       );
 
@@ -467,6 +470,41 @@ describe('Calendar View Tools', () => {
           expect(calledPath()).toContain('startDateTime=2026-09-22T00%3A00%3A00%2B05%3A30');
           expect(calledPath()).toContain('endDateTime=2026-09-23T00%3A00%3A00%2B05%3A30');
           expect(calledPath()).not.toContain('-07%3A00');
+          // The explicit `timezone` param wins for the DISPLAY header too, not just the window.
+          expect(calledOptions().headers?.Prefer ?? '').toContain(
+            'outlook.timezone="Asia/Kolkata"'
+          );
+          expect(calledOptions().headers?.Prefer ?? '').not.toContain('America/Los_Angeles');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: no default configured, no timezone param -> no outlook.timezone Prefer header',
+        async (toolName, pathParams) => {
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', undefined);
+          const handler = getToolHandler(toolName);
+          const result = (await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00-07:00',
+            endDateTime: '2026-09-23T00:00:00-07:00',
+          })) as { isError?: boolean };
+          expect(result.isError).toBeUndefined();
+          expect(calledOptions().headers?.Prefer ?? '').not.toContain('outlook.timezone');
+        }
+      );
+
+      it.each(WINDOW_TOOLS)(
+        '%s: default set -> exactly one outlook.timezone entry in Prefer, not duplicated',
+        async (toolName, pathParams) => {
+          vi.stubEnv('MS365_MCP_DEFAULT_TIMEZONE', 'America/Los_Angeles');
+          const handler = getToolHandler(toolName);
+          await handler({
+            ...pathParams,
+            startDateTime: '2026-09-22T00:00:00',
+            endDateTime: '2026-09-22T23:59:59',
+          });
+          const prefer = calledOptions().headers?.Prefer ?? '';
+          expect(prefer.split('outlook.timezone').length - 1).toBe(1);
         }
       );
 

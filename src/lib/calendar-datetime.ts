@@ -14,8 +14,9 @@
  *   3. bare datetime + no `timezone`, server default configured (MS365_MCP_DEFAULT_TIMEZONE, see
  *      default-timezone.ts) → same as 2, using the default zone
  *   4. bare datetime + neither → validation error (never send an ambiguous window)
- * The default only fixes the query window; it does not set the `Prefer: outlook.timezone` display
- * header (that stays driven by the explicit `timezone` param alone).
+ * The default also drives the `Prefer: outlook.timezone` display header when no explicit `timezone`
+ * param is passed (set in graph-tools.ts), so returned event times come back in the default zone;
+ * an explicit `timezone` param always wins for both the query window and the display header.
  *
  * Offsets are computed with the built-in `Intl` API (full ICU ships with Node 18+), so DST
  * transitions are handled from the tz database rather than a fixed offset table.
@@ -104,8 +105,14 @@ function assertValidTimeZone(timeZone: string): void {
   }
 }
 
-/** Offset of `timeZone` from UTC at the given instant, in minutes (e.g. -420 for PDT). */
-function offsetMinutesAt(timeZone: string, epochMs: number): number {
+/**
+ * Offset of `timeZone` from UTC at the given instant, in minutes (e.g. -420 for PDT).
+ *
+ * Exported for reuse by mail-response-timezone.ts, which converts an already-known UTC instant
+ * (Graph's mail DateTimeOffset fields) to local time — unlike offsetMinutesForWallTime below,
+ * there's no wall-clock ambiguity to resolve since the instant is unambiguous.
+ */
+export function offsetMinutesAt(timeZone: string, epochMs: number): number {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hourCycle: 'h23',
@@ -147,7 +154,8 @@ function offsetMinutesForWallTime(timeZone: string, p: ParsedDateTime): number {
   return third === second ? second : first;
 }
 
-function formatOffset(minutes: number): string {
+/** Format a UTC-offset in minutes as `±HH:MM` (e.g. -420 -> "-07:00"). Exported for reuse. */
+export function formatOffset(minutes: number): string {
   const sign = minutes < 0 ? '-' : '+';
   const abs = Math.abs(minutes);
   const hh = String(Math.floor(abs / 60)).padStart(2, '0');

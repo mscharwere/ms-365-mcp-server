@@ -335,6 +335,9 @@ function projectCalendarEvent(event: JsonValue): JsonValue {
  *   id, from, subject, receivedDateTime, body.content (safelinks decoded),
  *   importance, isRead, hasAttachments, bodyPreview (truncated preview for list calls),
  *   @odata.nextLink (CRITICAL — pagination must survive compaction)
+ *   sentDateTime, lastModifiedDateTime, createdDateTime, and each field's `*Local` sibling
+ *   (added by lib/mail-response-timezone.ts before compaction runs) — only when present, so a
+ *   caller's $select controls what shows up post-compaction same as pre-compaction.
  *
  * DROPPED:
  *   internetMessageId, conversationId — not needed for briefing use
@@ -354,6 +357,14 @@ function projectMailMessage(msg: JsonValue): JsonValue {
   if (msg.from !== undefined) out.from = msg.from;
   if (msg.subject !== undefined) out.subject = msg.subject;
   if (msg.receivedDateTime !== undefined) out.receivedDateTime = msg.receivedDateTime;
+  if (msg.receivedDateTimeLocal !== undefined) out.receivedDateTimeLocal = msg.receivedDateTimeLocal;
+  if (msg.sentDateTime !== undefined) out.sentDateTime = msg.sentDateTime;
+  if (msg.sentDateTimeLocal !== undefined) out.sentDateTimeLocal = msg.sentDateTimeLocal;
+  if (msg.lastModifiedDateTime !== undefined) out.lastModifiedDateTime = msg.lastModifiedDateTime;
+  if (msg.lastModifiedDateTimeLocal !== undefined)
+    out.lastModifiedDateTimeLocal = msg.lastModifiedDateTimeLocal;
+  if (msg.createdDateTime !== undefined) out.createdDateTime = msg.createdDateTime;
+  if (msg.createdDateTimeLocal !== undefined) out.createdDateTimeLocal = msg.createdDateTimeLocal;
   if (msg.importance !== undefined) out.importance = msg.importance;
   if (msg.isRead !== undefined) out.isRead = msg.isRead;
   if (msg.hasAttachments !== undefined) out.hasAttachments = msg.hasAttachments;

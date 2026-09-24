@@ -27,6 +27,7 @@ import {
   MailFilterDateTimeError,
   normalizeMailFilterParams,
 } from './lib/mail-datetime-filter.js';
+import { MAIL_LOCAL_FIELD_TOOLS, addMailResponseLocalFields } from './lib/mail-response-timezone.js';
 import { getDefaultTimeZone } from './lib/default-timezone.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -490,10 +491,29 @@ async function executeGraphTool(
 
     const preferValues: string[] = [];
 
-    // Handle timezone parameter for calendar endpoints
-    if (config?.supportsTimezone && params.timezone) {
-      preferValues.push(`outlook.timezone="${params.timezone}"`);
-      logger.info(`Setting timezone preference: outlook.timezone="${params.timezone}"`);
+    // Handle timezone parameter for calendar endpoints. An explicit `timezone` param always wins.
+    // Otherwise, fall back to the server-level MS365_MCP_DEFAULT_TIMEZONE (default-timezone.ts) so
+    // returned event start/end come back in local time instead of UTC even when the caller didn't
+    // pass `timezone` — previously the default only fixed the calendarView query WINDOW
+    // (calendar-datetime.ts), not how times in the response were displayed.
+    // Graph's dateTimeTimeZone/outlook.timezone accepts IANA names (e.g. "America/Los_Angeles")
+    // alongside Windows names — see the "Additional time zones" list at
+    // https://learn.microsoft.com/en-us/graph/api/resources/datetimetimezone — so an IANA default
+    // is passed through as-is, no Windows-name translation needed.
+    if (config?.supportsTimezone) {
+      const explicitTimezone =
+        typeof params.timezone === 'string' && params.timezone.trim() !== ''
+          ? params.timezone.trim()
+          : undefined;
+      const effectiveTimezone = explicitTimezone ?? getDefaultTimeZone();
+      if (effectiveTimezone) {
+        // preferValues is fresh per call (declared just above) — never duplicated.
+        preferValues.push(`outlook.timezone="${effectiveTimezone}"`);
+        logger.info(
+          `Setting timezone preference: outlook.timezone="${effectiveTimezone}"` +
+            (explicitTimezone ? '' : ' (server default, no explicit timezone param)')
+        );
+      }
     }
 
     const bodyFormat = process.env.MS365_MCP_BODY_FORMAT || 'text';
@@ -676,6 +696,27 @@ async function executeGraphTool(
         }
       } catch {
         // Non-JSON response
+      }
+    }
+
+    // Mail endpoints always return receivedDateTime/sentDateTime/createdDateTime/
+    // lastModifiedDateTime in UTC and don't honor Prefer: outlook.timezone (see
+    // lib/mail-response-timezone.ts) — add a `<field>Local` sibling in
+    // MS365_MCP_DEFAULT_TIMEZONE when configured. Runs before compaction so the compactor's mail
+    // projection (compactors.ts) can carry the new *Local fields through. Never overwrites the
+    // UTC field itself: mail-datetime-filter.ts's $filter normalization depends on it.
+    if (MAIL_LOCAL_FIELD_TOOLS.has(config?.toolName ?? tool.alias) && response?.content?.[0]?.text) {
+      const defaultZone = getDefaultTimeZone();
+      if (defaultZone) {
+        try {
+          const rawJson = JSON.parse(response.content[0].text);
+          const withLocalFields = addMailResponseLocalFields(rawJson, defaultZone);
+          response.content[0].text = JSON.stringify(withLocalFields);
+        } catch (err) {
+          logger.error(
+            `Mail local-datetime enrichment failed for ${tool.alias}: ${(err as Error).message}. Returning response without *Local fields.`
+          );
+        }
       }
     }
 
