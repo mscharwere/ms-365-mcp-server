@@ -14,8 +14,9 @@
  *   3. bare datetime + no `timezone`, server default configured (MS365_MCP_DEFAULT_TIMEZONE, see
  *      default-timezone.ts) → same as 2, using the default zone
  *   4. bare datetime + neither → validation error (never send an ambiguous window)
- * The default only fixes the query window; it does not set the `Prefer: outlook.timezone` display
- * header (that stays driven by the explicit `timezone` param alone).
+ * The default also drives the `Prefer: outlook.timezone` display header when no explicit `timezone`
+ * param is passed (set in graph-tools.ts), so returned event times come back in the default zone;
+ * an explicit `timezone` param always wins for both the query window and the display header.
  *
  * Offsets are computed with the built-in `Intl` API (full ICU ships with Node 18+), so DST
  * transitions are handled from the tz database rather than a fixed offset table.
