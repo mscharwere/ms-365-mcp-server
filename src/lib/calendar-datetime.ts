@@ -104,8 +104,14 @@ function assertValidTimeZone(timeZone: string): void {
   }
 }
 
-/** Offset of `timeZone` from UTC at the given instant, in minutes (e.g. -420 for PDT). */
-function offsetMinutesAt(timeZone: string, epochMs: number): number {
+/**
+ * Offset of `timeZone` from UTC at the given instant, in minutes (e.g. -420 for PDT).
+ *
+ * Exported for reuse by mail-response-timezone.ts, which converts an already-known UTC instant
+ * (Graph's mail DateTimeOffset fields) to local time — unlike offsetMinutesForWallTime below,
+ * there's no wall-clock ambiguity to resolve since the instant is unambiguous.
+ */
+export function offsetMinutesAt(timeZone: string, epochMs: number): number {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hourCycle: 'h23',
@@ -147,7 +153,8 @@ function offsetMinutesForWallTime(timeZone: string, p: ParsedDateTime): number {
   return third === second ? second : first;
 }
 
-function formatOffset(minutes: number): string {
+/** Format a UTC-offset in minutes as `±HH:MM` (e.g. -420 -> "-07:00"). Exported for reuse. */
+export function formatOffset(minutes: number): string {
   const sign = minutes < 0 ? '-' : '+';
   const abs = Math.abs(minutes);
   const hh = String(Math.floor(abs / 60)).padStart(2, '0');

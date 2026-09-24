@@ -526,6 +526,143 @@ describe('graph-tools', () => {
     });
   });
 
+  // ---- 6b. mail response *Local field enrichment (fix/response-timezone-local) ----
+  describe('mail response *Local field enrichment', () => {
+    const prevDefaultTz = process.env.MS365_MCP_DEFAULT_TIMEZONE;
+
+    afterEach(() => {
+      if (prevDefaultTz === undefined) delete process.env.MS365_MCP_DEFAULT_TIMEZONE;
+      else process.env.MS365_MCP_DEFAULT_TIMEZONE = prevDefaultTz;
+    });
+
+    it('adds *Local fields to a get-mail-message response and survives compaction', async () => {
+      process.env.MS365_MCP_DEFAULT_TIMEZONE = 'America/Los_Angeles';
+
+      const endpoint = makeEndpoint({
+        alias: 'get-mail-message',
+        path: '/me/messages/:messageId',
+        parameters: [],
+      });
+      const config = makeConfig({ toolName: 'get-mail-message', pathPattern: '/me/messages/{id}' });
+      mockEndpoints.push(endpoint);
+      mockEndpointsJson = [config];
+
+      const rawMessage = {
+        id: 'msg-1',
+        subject: 'Test',
+        receivedDateTime: '2026-09-24T00:41:48Z',
+        sentDateTime: '2026-09-23T23:40:00Z',
+      };
+      const graphClient = createMockGraphClient([
+        { content: [{ type: 'text', text: JSON.stringify(rawMessage) }] },
+      ]);
+
+      const server = createMockServer();
+      const { registerGraphTools } = await loadModule();
+      registerGraphTools(server as any, graphClient as any);
+
+      const tool = server.tools.get('get-mail-message');
+      const result = await tool!.handler({});
+      const body = JSON.parse(result.content[0].text);
+
+      // Original UTC fields untouched.
+      expect(body.receivedDateTime).toBe('2026-09-24T00:41:48Z');
+      expect(body.sentDateTime).toBe('2026-09-23T23:40:00Z');
+      // Local siblings added, correctly converted (PDT, -07:00 on this date).
+      expect(body.receivedDateTimeLocal).toBe('2026-09-23T17:41:48-07:00');
+      expect(body.sentDateTimeLocal).toBe('2026-09-23T16:40:00-07:00');
+      // $select subset honored — createdDateTime/lastModifiedDateTime weren't in the raw response,
+      // so no Local sibling was invented for them.
+      expect(body).not.toHaveProperty('createdDateTimeLocal');
+      expect(body).not.toHaveProperty('lastModifiedDateTimeLocal');
+    });
+
+    it('adds *Local fields to a list-mail-messages response, one per item, through compaction', async () => {
+      process.env.MS365_MCP_DEFAULT_TIMEZONE = 'America/Los_Angeles';
+
+      const endpoint = makeEndpoint({ alias: 'list-mail-messages', path: '/me/messages' });
+      const config = makeConfig({ toolName: 'list-mail-messages', pathPattern: '/me/messages' });
+      mockEndpoints.push(endpoint);
+      mockEndpointsJson = [config];
+
+      const raw = {
+        value: [
+          { id: 'a', receivedDateTime: '2026-09-24T00:41:48Z' },
+          { id: 'b', receivedDateTime: '2026-12-15T04:30:00Z' },
+        ],
+        '@odata.nextLink': 'https://graph/next',
+      };
+      const graphClient = createMockGraphClient([
+        { content: [{ type: 'text', text: JSON.stringify(raw) }] },
+      ]);
+
+      const server = createMockServer();
+      const { registerGraphTools } = await loadModule();
+      registerGraphTools(server as any, graphClient as any);
+
+      const tool = server.tools.get('list-mail-messages');
+      const result = await tool!.handler({});
+      const body = JSON.parse(result.content[0].text);
+
+      expect(body.value[0].receivedDateTimeLocal).toBe('2026-09-23T17:41:48-07:00'); // PDT
+      expect(body.value[1].receivedDateTimeLocal).toBe('2026-12-14T20:30:00-08:00'); // PST
+      expect(body['@odata.nextLink']).toBe('https://graph/next');
+    });
+
+    it('is a no-op when MS365_MCP_DEFAULT_TIMEZONE is not configured', async () => {
+      delete process.env.MS365_MCP_DEFAULT_TIMEZONE;
+
+      const endpoint = makeEndpoint({
+        alias: 'get-mail-message',
+        path: '/me/messages/:messageId',
+        parameters: [],
+      });
+      const config = makeConfig({ toolName: 'get-mail-message', pathPattern: '/me/messages/{id}' });
+      mockEndpoints.push(endpoint);
+      mockEndpointsJson = [config];
+
+      const rawMessage = { id: 'msg-1', receivedDateTime: '2026-09-24T00:41:48Z' };
+      const graphClient = createMockGraphClient([
+        { content: [{ type: 'text', text: JSON.stringify(rawMessage) }] },
+      ]);
+
+      const server = createMockServer();
+      const { registerGraphTools } = await loadModule();
+      registerGraphTools(server as any, graphClient as any);
+
+      const tool = server.tools.get('get-mail-message');
+      const result = await tool!.handler({});
+      const body = JSON.parse(result.content[0].text);
+
+      expect(body).not.toHaveProperty('receivedDateTimeLocal');
+      expect(body.receivedDateTime).toBe('2026-09-24T00:41:48Z');
+    });
+
+    it('does not touch tools outside MAIL_LOCAL_FIELD_TOOLS even with a default configured', async () => {
+      process.env.MS365_MCP_DEFAULT_TIMEZONE = 'America/Los_Angeles';
+
+      // list-calendar-events is not a mail tool; it should never gain *Local mail fields.
+      const endpoint = makeEndpoint({ alias: 'list-calendar-events', path: '/me/events' });
+      const config = makeConfig({ toolName: 'list-calendar-events', pathPattern: '/me/events' });
+      mockEndpoints.push(endpoint);
+      mockEndpointsJson = [config];
+
+      const raw = { value: [{ id: 'evt-1', receivedDateTime: '2026-09-24T00:41:48Z' }] };
+      const graphClient = createMockGraphClient([
+        { content: [{ type: 'text', text: JSON.stringify(raw) }] },
+      ]);
+
+      const server = createMockServer();
+      const { registerGraphTools } = await loadModule();
+      registerGraphTools(server as any, graphClient as any);
+
+      const tool = server.tools.get('list-calendar-events');
+      const result = await tool!.handler({});
+      const body = JSON.parse(result.content[0].text);
+      expect(body.value[0]).not.toHaveProperty('receivedDateTimeLocal');
+    });
+  });
+
   // ---- 7. outlook.body-content-type Prefer header ----
   describe('outlook.body-content-type Prefer header', () => {
     it('should set Prefer: outlook.body-content-type="text" on GET requests', async () => {
